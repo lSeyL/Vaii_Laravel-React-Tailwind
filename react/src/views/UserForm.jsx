@@ -16,9 +16,10 @@ export default function UserForm() {
   const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setNotification } = useStateContext();
+  const [successMessage, setSuccessMessage] = useState("");
 
-  if (id) {
-    useEffect(() => {
+  useEffect(() => {
+    if (id) {
       setLoading(true);
       axiosClient
         .get(`/users/${id}`)
@@ -29,8 +30,8 @@ export default function UserForm() {
         .catch(() => {
           setLoading(false);
         });
-    }, []);
-  }
+    }
+  }, [id]);
 
   const onSubmit = (ev) => {
     ev.preventDefault();
@@ -51,6 +52,8 @@ export default function UserForm() {
       axiosClient
         .post("/users", user)
         .then(() => {
+          console.log("User created..");
+          setSuccessMessage("User was successfully created!");
           setNotification("User was successfully created");
           navigate("/users");
         })
@@ -79,6 +82,9 @@ export default function UserForm() {
               <p key={key}>{errors[key][0]}</p>
             ))}
           </div>
+        )}
+        {successMessage && (
+          <div className="alert alert-success">{successMessage}</div>
         )}
         {!loading && (
           <form onSubmit={onSubmit}>

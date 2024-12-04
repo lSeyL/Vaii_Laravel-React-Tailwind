@@ -21,7 +21,7 @@ function Signup() {
       password: passwordRef.current.value,
       password_confirmation: passwordConfirmationRef.current.value,
     };
-
+    console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
     axiosClient
       .post("/signup", payload)
       .then(({ data }) => {
