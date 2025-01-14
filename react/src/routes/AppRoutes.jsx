@@ -3,9 +3,9 @@ import Home from "../pages/Home";
 import About from "../pages/About/About";
 import NotFound from "../pages/NotFound";
 import Layout from "../components/Layout/Layout";
-import Products from "../pages/About/Products";
+import Products from "../pages/Products/Products";
 import Contact from "../pages/About/Contact";
-import ProductDetails from "../pages/About/ProductDetails";
+import ProductDetails from "../pages/Products/ProductDetails";
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Cart/Checkout";
 import OrderConfirmation from "../pages/Cart/OrderConfirmation";
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
                 element: <Faq />,
             },
             {
-                path: "/products/:id", // Dynamic route for product details
+                path: "/products/:id",
                 element: <ProductDetails />,
             },
             {

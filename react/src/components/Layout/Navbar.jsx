@@ -82,7 +82,7 @@ function Navbar() {
                 className={`
           fixed inset-0      
           backdrop-blur-[2px]    
-          z-20
+          z-[1000]
           transition-all duration-300 ease-in-out
           ${
               isOpen
@@ -122,7 +122,7 @@ function Navbar() {
             <div
                 className={`fixed inset-y-0 left-0 transform md:hidden ${
                     isOpen ? "translate-x-0" : "-translate-x-full"
-                } transition-transform duration-300 ease-in-out bg-stone-100 shadow-md text-black w-64 p-4 z-50`}
+                } transition-transform duration-300 ease-in-out bg-stone-100 shadow-md text-black w-64 p-4 z-[2000]`}
             >
                 <nav className="flex flex-col space-y-4">
                     <NavItem to="/" onClick={toggleMenu} phone={true}>

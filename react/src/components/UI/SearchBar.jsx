@@ -33,11 +33,11 @@ function SearchBar({ onSearchIconClick, isOpen, iconSize = 24 }) {
             <input
                 type="text"
                 className={`
-                    ${isOpen ? "w-28 sm:w-64 sm:focus:w-72" : " hidden w-0"}
+                    ${isOpen ? "w-32 sm:w-64 sm:focus:w-72" : " hidden w-0"}
                     transition-all duration-300
                     overflow-hidden 
                     rounded-full bg-neutral px-4 py-2
-                    focus:outline-none focus:ring focus:ring-stone-800 focus:ring-opacity-50
+                    focus:outline-none focus:ring focus:ring-stone-400 focus:ring-opacity-50
                   `}
                 placeholder="Search products.."
                 value={query}

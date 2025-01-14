@@ -20,87 +20,51 @@ function Cart() {
     const finalTotal = (parseFloat(totalPrice) + parseFloat(tax)).toFixed(2);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row justify-center p-24 gap-8">
+        <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row justify-center p-2 sm:p-10 md:p-24 gap-4 sm:gap-16">
             {/* Left Card - Larger */}
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full lg:w-2/3">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full lg:w-2/3  h-[40rem]">
                 <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
-                <ul>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product A</span>
-                        <span>$29.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product B</span>
-                        <span>$49.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    <li className="flex justify-between items-center mb-4">
-                        <span>Product C</span>
-                        <span>$19.99</span>
-                        <button className="text-red-500 hover:text-red-700">
-                            &times;
-                        </button>
-                    </li>
-                    {/* Add more products as needed */}
+                <div className="flex justify-between font-bold pb-2">
+                    <span>Product</span>
+                    <span>Price</span>
+                </div>
+                <ul className="space-y-4 divide-y">
+                    {cartItems.length === 0 ? (
+                        <li className="text-center text-gray-500">
+                            Your cart is empty.
+                        </li>
+                    ) : (
+                        cartItems.map((item) => (
+                            <li
+                                key={item.id}
+                                className="flex justify-between items-center py-2 pt-4"
+                            >
+                                <div className="flex items-center">
+                                    <div className="ml-10 h-24 w-24 bg-gray-200 rounded-md flex-shrink-0 mr-4">
+                                        {/* Placeholder for product image */}
+                                    </div>
+                                    <span>{item.name}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="mr-4">
+                                        ${item.price.toFixed(2)}
+                                    </span>
+                                    <button
+                                        onClick={() => handleDelete(item.id)}
+                                        className="text-red-500 hover:text-red-700 focus:outline-none mr-6"
+                                        aria-label={`Delete ${item.name}`}
+                                    >
+                                        &#10005;
+                                    </button>
+                                </div>
+                            </li>
+                        ))
+                    )}
                 </ul>
             </div>
 
             {/* Right Card - Smaller and Shorter */}
-            <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-1/3 h-96">
+            <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-1/3 h-96 ">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                 <div className="flex justify-between mb-2">
                     <span>Subtotal</span>

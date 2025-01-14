@@ -37,136 +37,285 @@ function Home() {
     }, []);
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen p-5 md:p-5 lg:p-5 xl:p-20 gap-4">
-            {/* Left Card */}
-            <div className="flex-1 rounded-lg shadow-lg relative md:mr-1">
-                {/* Background Image */}
-                <div
-                    className="absolute inset-0 rounded-lg transition-all duration-1000"
-                    style={{
-                        backgroundImage: `url(${bgUrl})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        zIndex: -1,
-                        filter: "grayscale(10%)",
-                        opacity: opacity,
-                    }}
-                ></div>
+        <>
+            <div className="flex flex-col md:flex-row min-h-screen p-5 md:p-5 lg:p-5 xl:p-20 gap-4">
+                {/* Left Card */}
+                <div className="flex-1 rounded-lg shadow-lg relative md:mr-1">
+                    {/* Background Image */}
+                    <div
+                        className="absolute inset-0 rounded-lg transition-all duration-1000"
+                        style={{
+                            backgroundImage: `url(${bgUrl})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            zIndex: -1,
+                            filter: "grayscale(10%)",
+                            opacity: opacity,
+                        }}
+                    ></div>
 
-                {/* Top Links */}
-                <div className="hidden md:hidden lg:flex p-4 relative z-10 mt-10 gap-4 flex-wrap lg:mt-2 xl:mb-4 2xl:mb-32">
-                    <button
-                        onClick={() => changeBackground(img1)}
-                        className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                    >
-                        <span className="font-medium">Scaled</span>
-                    </button>
-                    <button
-                        onClick={() => changeBackground(img2)}
-                        className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                    >
-                        <span className="font-medium">Minimalist</span>
-                    </button>
-                    <button
-                        onClick={() => changeBackground(img3)}
-                        className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                    >
-                        <span className="font-medium">Renders</span>
-                    </button>
-                    <button
-                        onClick={() => changeBackground(img4)}
-                        className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                    >
-                        <span className="font-medium">Furniture</span>
-                    </button>
+                    {/* Top Links */}
+                    <div className="hidden md:hidden lg:flex p-4 relative z-10 mt-10 gap-4 flex-wrap lg:mt-2 xl:mb-4 2xl:mb-32">
+                        <button
+                            onClick={() => changeBackground(img1)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Scaled</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img2)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Minimalist</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img3)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Renders</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img4)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Furniture</span>
+                        </button>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="flex-1 flex flex-col justify-end p-3 mb-5 sm:mb-0 md:mb-2 sm:mt-[40rem] md:mt-[28rem] lg:mt-[24rem] relative z-10 xl:mt-[22rem]">
+                        <div className="flex flex-col items-start w-full mb-5 sm:mb-0">
+                            <h2 className="text-3xl sm:text-4xl md:text-4xl md:mt-5 lg:mt-5 lg:text-5xl font-roboto font-light text-neutral text-left max-w-lg ml-4">
+                                Looking for Custom{" "}
+                                <span className="font-normal">3D Modeling</span>{" "}
+                                at Scale?
+                            </h2>
+                            <p className="text-gray-600 text-base sm:text-xl md:text-xl mt-2 text-left ml-4 text-neutral ">
+                                Tell us what you need.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Button Section */}
+                    <div className="p-4 flex justify-start relative z-10 border-t sm:mt-1">
+                        <NavLink
+                            to="/products"
+                            className="border-2 border-neutral text-neutral hover:bg-neutral py-2 hover:text-stone-800 transition-all duration-300 ease-in-out backdrop-blur-md px-4 rounded-full flex items-center"
+                        >
+                            <span className="mr-2">View Products</span>
+                            <HiOutlineArrowTopRightOnSquare size={26} />
+                        </NavLink>
+                    </div>
                 </div>
-
-                {/* Content Area */}
-                <div className="flex-1 flex flex-col justify-end p-3 mb-5 sm:mb-0 md:mb-2 sm:mt-[40rem] md:mt-[28rem] lg:mt-[24rem] relative z-10 xl:mt-[22rem]">
-                    <div className="flex flex-col items-start w-full mb-5 sm:mb-0">
-                        <h2 className="text-3xl sm:text-4xl md:text-4xl md:mt-5 lg:mt-5 lg:text-5xl font-roboto font-light text-neutral text-left max-w-lg ml-4">
-                            Looking for Custom{" "}
-                            <span className="font-normal">3D Modeling</span> at
-                            Scale?
+                {/* Right Card */}
+                <div className="flex-1 rounded-lg bg-neutral shadow-lg flex flex-col md:ml-6">
+                    <div className="p-4">
+                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-roboto font-light max-w-xl">
+                            Discover the Essence of{" "}
+                            <span className="font-normal">Minimalist</span>{" "}
+                            Furniture Design & Style
                         </h2>
-                        <p className="text-gray-600 text-base sm:text-xl md:text-xl mt-2 text-left ml-4 text-neutral ">
-                            Tell us what you need.
-                        </p>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center p-4">
+                        <div className="flex flex-col items-center">
+                            <div className="hidden sm:flex md:hidden lg:flex flex-row items-center space-x-4 mb-4 flex-wrap">
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Exclusive
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">Limited</span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Hot Picks
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Must-Have
+                                    </span>
+                                </NavLink>
+                            </div>
+                            <div className="flex flex-col md:flex-row items-center px-6 py-4 bg-white rounded-xl w-full">
+                                <div className="flex flex-col items-center text-center md:items-start md:text-left sm:flex-1 space-y-4 mt-5">
+                                    <h3 className="text-xl sm:text-lg font-semibold">
+                                        PureSpace
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        Sleek, minimalist design for your work.
+                                    </p>
+                                    <button className="mt-10 border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white bg-neutral py-2 px-2 rounded-full transition duration-300 ease-in-out">
+                                        <HiOutlineArrowTopRightOnSquare
+                                            size={26}
+                                        />
+                                    </button>
+                                </div>
+                                <div className="flex-1 flex justify-center md:justify-end mt-5 mb-4 md:mt-0">
+                                    <img
+                                        src={imgSmallCard}
+                                        alt="Models"
+                                        className="w-[50rem] h-[12rem]   md:w-48 md:h-48 object-cover rounded-lg"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Button Section */}
-                <div className="p-4 flex justify-start relative z-10 border-t sm:mt-1">
-                    <NavLink
-                        to="/products"
-                        className="border-2 border-neutral text-neutral hover:bg-neutral py-2 hover:text-stone-800 transition-all duration-300 ease-in-out backdrop-blur-md px-4 rounded-full flex items-center"
-                    >
-                        <span className="mr-2">View Products</span>
-                        <HiOutlineArrowTopRightOnSquare size={26} />
-                    </NavLink>
-                </div>
-            </div>
-            {/* Right Card */}
-            <div className="flex-1 rounded-lg bg-neutral shadow-lg flex flex-col md:ml-6">
-                <div className="p-4">
-                    <h2 className="text-3xl sm:text-4xl md:text-6xl font-roboto font-light max-w-xl">
-                        Discover the Essence of{" "}
-                        <span className="font-normal">Minimalist</span>{" "}
-                        Furniture Design & Style
-                    </h2>
-                </div>
-                <div className="flex-1 flex flex-col items-center justify-center p-4">
-                    <div className="flex flex-col items-center">
-                        <div className="hidden sm:flex md:hidden lg:flex flex-row items-center space-x-4 mb-4 flex-wrap">
-                            <NavLink
-                                to="/products"
-                                className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                            >
-                                <span className="font-medium">Exclusive</span>
-                            </NavLink>
-                            <NavLink
-                                to="/products"
-                                className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                            >
-                                <span className="font-medium">Limited</span>
-                            </NavLink>
-                            <NavLink
-                                to="/products"
-                                className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                            >
-                                <span className="font-medium">Hot Picks</span>
-                            </NavLink>
-                            <NavLink
-                                to="/products"
-                                className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
-                            >
-                                <span className="font-medium">Must-Have</span>
-                            </NavLink>
+            <div className="flex flex-col md:flex-row min-h-screen p-5 md:p-5 lg:p-5 xl:p-20 gap-4">
+                {/* Left Card */}
+                <div className="flex-1 rounded-lg shadow-lg relative md:mr-1">
+                    {/* Background Image */}
+                    <div
+                        className="absolute inset-0 rounded-lg transition-all duration-1000"
+                        style={{
+                            backgroundImage: `url(${bgUrl})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+
+                            filter: "grayscale(10%)",
+                            opacity: opacity,
+                        }}
+                    ></div>
+
+                    {/* Top Links */}
+                    <div className="hidden md:hidden lg:flex p-4 relative z-10 mt-10 gap-4 flex-wrap lg:mt-2 xl:mb-4 2xl:mb-32">
+                        <button
+                            onClick={() => changeBackground(img1)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Scaled</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img2)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Minimalist</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img3)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Renders</span>
+                        </button>
+                        <button
+                            onClick={() => changeBackground(img4)}
+                            className="border-2 border-neutral text-neutral hover:bg-neutral hover:text-stone-800 py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                        >
+                            <span className="font-medium">Furniture</span>
+                        </button>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="flex-1 flex flex-col justify-end p-3 mb-5 sm:mb-0 md:mb-2 sm:mt-[40rem] md:mt-[28rem] lg:mt-[24rem] relative z-10 xl:mt-[22rem]">
+                        <div className="flex flex-col items-start w-full mb-5 sm:mb-0">
+                            <h2 className="text-3xl sm:text-4xl md:text-4xl md:mt-5 lg:mt-5 lg:text-5xl font-roboto font-light text-neutral text-left max-w-lg ml-4">
+                                Looking for Custom{" "}
+                                <span className="font-normal">3D Modeling</span>{" "}
+                                at Scale?
+                            </h2>
+                            <p className="text-gray-600 text-base sm:text-xl md:text-xl mt-2 text-left ml-4 text-neutral ">
+                                Tell us what you need.
+                            </p>
                         </div>
-                        <div className="flex flex-col md:flex-row items-center px-6 py-4 bg-white rounded-xl w-full">
-                            <div className="flex flex-col items-center text-center md:items-start md:text-left sm:flex-1 space-y-4 mt-5">
-                                <h3 className="text-xl sm:text-lg font-semibold">
-                                    PureSpace
-                                </h3>
-                                <p className="text-gray-600">
-                                    Sleek, minimalist design for your work.
-                                </p>
-                                <button className="mt-10 border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white bg-neutral py-2 px-2 rounded-full transition duration-300 ease-in-out">
-                                    <HiOutlineArrowTopRightOnSquare size={26} />
-                                </button>
+                    </div>
+
+                    {/* Button Section */}
+                    <div className="p-4 flex justify-start relative z-10 border-t sm:mt-1">
+                        <NavLink
+                            to="/products"
+                            className="border-2 border-neutral text-neutral hover:bg-neutral py-2 hover:text-stone-800 transition-all duration-300 ease-in-out backdrop-blur-md px-4 rounded-full flex items-center"
+                        >
+                            <span className="mr-2">View Products</span>
+                            <HiOutlineArrowTopRightOnSquare size={26} />
+                        </NavLink>
+                    </div>
+                </div>
+                {/* Right Card */}
+                <div className="flex-1 rounded-lg bg-neutral shadow-lg flex flex-col md:ml-6">
+                    <div className="p-4">
+                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-roboto font-light max-w-xl">
+                            Discover the Essence of{" "}
+                            <span className="font-normal">Minimalist</span>{" "}
+                            Furniture Design & Style
+                        </h2>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center p-4">
+                        <div className="flex flex-col items-center">
+                            <div className="hidden sm:flex md:hidden lg:flex flex-row items-center space-x-4 mb-4 flex-wrap z-0">
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Exclusive
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">Limited</span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Hot Picks
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className="border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white py-2 px-4 rounded-full transition duration-300 ease-in-out backdrop-blur-md"
+                                >
+                                    <span className="font-medium">
+                                        Must-Have
+                                    </span>
+                                </NavLink>
                             </div>
-                            <div className="flex-1 flex justify-center md:justify-end mt-5 mb-4 md:mt-0">
-                                <img
-                                    src={imgSmallCard}
-                                    alt="Models"
-                                    className="w-[50rem] h-[12rem]   md:w-48 md:h-48 object-cover rounded-lg"
-                                />
+                            <div className="flex flex-col md:flex-row items-center px-6 py-4 bg-white rounded-xl w-full">
+                                <div className="flex flex-col items-center text-center md:items-start md:text-left sm:flex-1 space-y-4 mt-5">
+                                    <h3 className="text-xl sm:text-lg font-semibold">
+                                        PureSpace
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        Sleek, minimalist design for your work.
+                                    </p>
+                                    <button className="mt-10 border-2 border-stone-800 text-stone-800 hover:bg-stone-600 hover:text-white bg-neutral py-2 px-2 rounded-full transition duration-300 ease-in-out">
+                                        <HiOutlineArrowTopRightOnSquare
+                                            size={26}
+                                        />
+                                    </button>
+                                </div>
+                                <div className="flex-1 flex justify-center md:justify-end mt-5 mb-4 md:mt-0">
+                                    <img
+                                        src={imgSmallCard}
+                                        alt="Models"
+                                        className="w-[50rem] h-[12rem]   md:w-48 md:h-48 object-cover rounded-lg"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
