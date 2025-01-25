@@ -37,15 +37,30 @@ cd 3d-models-eshop
 ```
 
 #
-<p align="left"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="left"><a href="https://laravel.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg" alt="Laravel Logo" height="80" ></a></p>
 
 ### Step 2: Backend Setup (Laravel)
 1. Navigate to the project's **root** directory using terminal
-2. Copy **.env.example** into **.env ** and configure database credentials
-3. Run **composer install**
-4. Set the encryption key by executing **php artisan key:generate**
-5. Run migrations **php artisan migrate --seed**
-6. Start local server by executing **php artisan serve**
+2. Copy **.env.example** into **.env** and configure database credentials
+```bash
+cp .env.example .env
+``` 
+3. Run
+```bash
+composer install
+```  
+4. Set the encryption key by executing
+```bash
+php artisan key:generate
+``` 
+5. Run migrations
+```bash
+php artisan migrate --seed
+``` 
+6. Start local server by executing
+```bash
+php artisan serve
+``` 
 
 
 
@@ -54,9 +69,18 @@ cd 3d-models-eshop
 
 ### Step 3: Frontend Setup (React)
 1. Open new terminal and navigate to the **react** folder
+```bash
+cd react
+``` 
 2. Copy **react/.env.example** into **.env** and adjust the **VITE_API_BASE_URL** parameter
-3. Run **npm install**
-4. Run **npm run dev** to start vite server for React
+3. Run 
+```bash
+npm install
+``` 
+4. Start vite server for React
+```bash
+npm run dev
+``` 
 
 
 
