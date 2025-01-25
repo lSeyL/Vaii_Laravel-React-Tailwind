@@ -1,5 +1,3 @@
-![Total Commits](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lSeyL/f295f891b84cf1655a7034beed116712/raw/commit-count.json)
-
 # 3D Models E-Shop
 
 Welcome to the 3D Models E-Shop! This project is a modern e-commerce platform for showcasing and selling 3D models. Built with **React** for the frontend, **Laravel** for the backend, and styled using **Tailwind CSS**.
