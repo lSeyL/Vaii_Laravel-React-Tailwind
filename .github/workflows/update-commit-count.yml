@@ -1,0 +1,34 @@
+name: Update Commit Count Badge
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+  workflow_dispatch:
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Count Total Commits
+        id: commit_count
+        run: |
+          TOTAL_COMMITS=$(git rev-list --all --count)
+          echo "total=$TOTAL_COMMITS" >> $GITHUB_OUTPUT
+
+      - name: Update Gist with Commit Count
+        env:
+          GIST_SECRET: ${{ secrets.GIST_SECRET }}
+        run: |
+          GIST_ID=your_gist_id_here  # Replace with your Gist ID
+          COMMIT_COUNT=${{ steps.commit_count.outputs.total }}
+          echo "{\"schemaVersion\": 1, \"label\": \"Total Commits\", \"message\": \"$COMMIT_COUNT\", \"color\": \"blue\"}" > commit-count.json
+          curl -X PATCH \
+            -H "Authorization: token $GIST_SECRET" \
+            -H "Content-Type: application/json" \
+            -d "{\"files\": {\"commit-count.json\": {\"content\": \"$(cat commit-count.json)\"}}}" \
+            https://api.github.com/gists/$GIST_ID
