@@ -7,21 +7,12 @@ function Cart() {
         { id: 3, name: "Product C", price: 19.99 },
     ]);
 
-    // Handler to delete an item from the cart
     const handleDelete = (id) => {
         setCartItems(cartItems.filter((item) => item.id !== id));
     };
 
-    // Calculate total price
-    const totalPrice = cartItems
-        .reduce((acc, item) => acc + item.price, 0)
-        .toFixed(2);
-    const tax = (totalPrice * 0.1).toFixed(2); // Assuming 10% tax
-    const finalTotal = (parseFloat(totalPrice) + parseFloat(tax)).toFixed(2);
-
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row justify-center p-2 sm:p-10 md:p-24 gap-4 sm:gap-16">
-            {/* Left Card - Larger */}
             <div className="bg-white shadow-lg rounded-lg p-8 w-full lg:w-2/3  h-[40rem]">
                 <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
                 <div className="flex justify-between font-bold pb-2">
@@ -40,9 +31,7 @@ function Cart() {
                                 className="flex justify-between items-center py-2 pt-4"
                             >
                                 <div className="flex items-center">
-                                    <div className="ml-10 h-24 w-24 bg-gray-200 rounded-md flex-shrink-0 mr-4">
-                                        {/* Placeholder for product image */}
-                                    </div>
+                                    <div className="ml-10 h-24 w-24 bg-gray-200 rounded-md flex-shrink-0 mr-4"></div>
                                     <span>{item.name}</span>
                                 </div>
                                 <div className="flex items-center">
@@ -63,7 +52,6 @@ function Cart() {
                 </ul>
             </div>
 
-            {/* Right Card - Smaller and Shorter */}
             <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-1/3 h-96 ">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                 <div className="flex justify-between mb-2">
