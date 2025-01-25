@@ -1,3 +1,5 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/total/lSeyL/Vaii_Laravel-React-Tailwind)
+
 # 3D Models E-Shop
 
 Welcome to the 3D Models E-Shop! This project is a modern e-commerce platform for showcasing and selling 3D models. Built with **React** for the frontend, **Laravel** for the backend, and styled using **Tailwind CSS**.
