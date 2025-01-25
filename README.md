@@ -30,3 +30,22 @@ Before you begin, ensure you have the following installed on your system:
 ```bash
 git clone https://github.com/yourusername/3d-models-eshop.git
 cd 3d-models-eshop
+```
+
+### Step 2: Backend Setup (Laravel)
+1. Navigate to the project's **root** directory using terminal
+2. Copy **.env.example** into **.env ** and configure database credentials
+3. Run **composer install**
+4. Set the encryption key by executing **php artisan key:generate**
+5. Run migrations **php artisan migrate --seed**
+6. Start local server by executing **php artisan serve**
+   
+### Step 3: Frontend Setup (React)
+1. Open new terminal and navigate to the **react** folder
+2. Copy **react/.env.example** into **.env** and adjust the **VITE_API_BASE_URL** parameter
+3. Run **npm install**
+4. Run **npm run dev** to start vite server for React
+
+### Step 4: CSS Setup (Tailwind)
+
+
