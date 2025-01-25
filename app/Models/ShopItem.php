@@ -8,12 +8,17 @@ class ShopItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'price', 'category_id', 'file_path'];
+    protected $fillable = ['name', 'description', 'price', 'category_id','image_file_path', 'file_path'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function fileTypes()
+{
+    return $this->belongsToMany(FileType::class, 'shop_item_file_types');
+}
 
     public function orders()
     {

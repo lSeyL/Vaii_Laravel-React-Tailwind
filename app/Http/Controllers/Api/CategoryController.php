@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(10); // Consider pagination for large datasets
+        $categories = Category::paginate(12); // Consider pagination for large datasets
         return CategoryResource::collection($categories);
     }
 

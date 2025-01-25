@@ -17,11 +17,9 @@ class ShopItemController extends Controller
      */
     public function index()
     {
-        $shopItems = ShopItem::with('category')->withCount('purchasedByUsers')->paginate(10);
+        $shopItems = ShopItem::with('category','fileTypes')->withCount('purchasedByUsers')->paginate(9);
     
         return ShopItemResource::collection($shopItems);
-    
-    return ShopItemResource::collection($shopItems);
     }
 
     /**
@@ -35,6 +33,8 @@ class ShopItemController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'file' => 'required|file|mimes:obj,fbx,glb,glTF',
+            'file_type_ids' => 'required|array',
+            'file_type_ids.*' => 'exists:file_types,id',
         ]);
 
         if ($validator->fails()) {
@@ -58,7 +58,9 @@ class ShopItemController extends Controller
             'file_path' => $filePath,
         ]);
 
-        $shopItem->load(['category'])->loadCount('purchasedByUsers');
+        $shopItem->fileTypes()->sync($request->file_type_ids);
+
+        $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
         return (new ShopItemResource($shopItem))
                 ->additional(['message' => 'Shop item created successfully'])
                 ->response()
@@ -95,6 +97,8 @@ class ShopItemController extends Controller
             'price' => 'sometimes|required|numeric|min:0',
             'category_id' => 'sometimes|required|exists:categories,id',
             'file' => 'nullable|file|mimes:obj,fbx,glb,glTF',
+            'file_type_ids' => 'sometimes|array',
+            'file_type_ids.*' => 'exists:file_types,id',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -124,8 +128,11 @@ class ShopItemController extends Controller
         if ($request->has('category_id')) {
             $shopItem->category_id = $request->category_id;
         }
+        if ($request->has('file_type_ids')) {
+            $shopItem->fileTypes()->sync($request->file_type_ids);
+        }
         $shopItem->save();
-        $shopItem->load(['category'])->loadCount('purchasedByUsers');
+        $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
         return (new ShopItemResource($shopItem))
                 ->additional(['message' => 'Shop item updated successfully'])
                 ->response()

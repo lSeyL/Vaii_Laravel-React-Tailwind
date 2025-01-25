@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../../components/UI/Loader";
+import ProductItem from "./ProductItem";
 
 function Products() {
     const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ function Products() {
         async function fetchProducts() {
             setIsLoading(true);
             try {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
+                await new Promise((resolve) => setTimeout(resolve, 100));
                 const response = await axios.get(
                     "http://127.0.0.1:8000/api/shop-items"
                 );
@@ -27,22 +28,19 @@ function Products() {
     }, []);
 
     return (
-        <div className="flex flex-wrap gap-4 justify-evenly my-4 mx-4">
-            {isLoading && <Loader />}
-            <div>
-                <h1>Products Page</h1>
-                {products.length === 0 ? (
-                    <p>No products found</p>
-                ) : (
-                    <ul>
-                        {products.map((product) => (
-                            <li key={product.id}>
-                                {product.name} - {product.price}$
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+        <div className="flex flex-col items-center my-4 mx-auto max-w-screen-xl px-4">
+            <h1 className="text-4xl mb-4">Products Page</h1>
+            {isLoading ? (
+                <Loader />
+            ) : products.length === 0 ? (
+                <p>No products found</p>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 w-full">
+                    {products.map((product) => (
+                        <ProductItem key={product.id} product={product} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

@@ -10,19 +10,17 @@ function NotFound() {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-stone-200 py-10 sm:py-20">
-            <div className="relative max-w-4xl w-full h-3/4 shadow-2xl">
-                {/* Background Image */}
+            <div className="relative max-w-4xl w-full h-3/4 shadow-2xl mx-5">
                 <div
                     className="absolute inset-0 rounded-2xl"
                     style={{
-                        backgroundImage: `url(${imgUrl})`, // Set the background image for the whole page
+                        backgroundImage: `url(${imgUrl})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
-                        filter: "blur(3px) grayscale(80%)", // Apply blur and grayscale filter
+                        filter: "blur(3px) grayscale(80%)",
                     }}
                 ></div>
 
-                {/* Card Content */}
                 <div className="relative rounded-2xl p-6 sm:p-10 flex flex-col justify-center items-center opacity-90">
                     <h2 className="text-6xl sm:text-9xl mt-10 sm:mt-32 text-stone-100 font-semibold mb-2 text-center">
                         404
