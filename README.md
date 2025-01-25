@@ -1,4 +1,4 @@
-![GitHub commit activity](https://img.shields.io/github/commit-activity/total/lSeyL/Vaii_Laravel-React-Tailwind)
+![Total Commits](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lSeyL/f295f891b84cf1655a7034beed116712/raw/commit-count.json)
 
 # 3D Models E-Shop
 
