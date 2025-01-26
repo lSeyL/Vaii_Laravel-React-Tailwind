@@ -14,7 +14,7 @@ Route::get('/test', function () {
 
 Route::apiResource('shop-items', ShopItemController::class)->only(['index', 'show']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
-
+Route::get('/api/products/{category}/{slug}', [ShopItemController::class, 'showByCategoryAndSlug']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

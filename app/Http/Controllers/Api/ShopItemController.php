@@ -81,6 +81,23 @@ class ShopItemController extends Controller
         return new ShopItemResource($shopItem);
     }
 
+    public function showByCategoryAndSlug(string $category, string $slug)
+{
+    $shopItem = ShopItem::with('category')
+        ->withCount('purchasedByUsers')
+        ->whereHas('category', function ($query) use ($category) {
+            $query->where('name', $category);
+        })
+        ->where('slug', $slug)
+        ->first();
+
+    if (!$shopItem) {
+        return response()->json(['message' => 'Shop item not found'], 404);
+    }
+
+    return new ShopItemResource($shopItem);
+}
+
     /**
      * Update the specified resource in storage.
      */
