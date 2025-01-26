@@ -15,14 +15,20 @@ class CategoriesTableSeeder extends Seeder
     {
         DB::table('categories')->insert([
             [
-                'name' => 'Vehicles',
-                'description' => '3D models of various vehicles like cars, planes, and tanks.',
+                'name' => 'chair',
+                'description' => 'Chair category.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Architecture',
-                'description' => 'Detailed architectural models of buildings and structures.',
+                'name' => 'table',
+                'description' => 'Table category.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'sofa',
+                'description' => 'Sofa category.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

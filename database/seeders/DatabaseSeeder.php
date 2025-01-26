@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             OrdersTableSeeder::class,
             OrderShopItemTableSeeder::class,
             UserShopItemTableSeeder::class,
+            FileTypeSeeder::class,
         ]);
     }
 }

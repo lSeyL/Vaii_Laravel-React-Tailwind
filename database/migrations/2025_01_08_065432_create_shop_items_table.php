@@ -18,6 +18,7 @@ class CreateShopItemsTable extends Migration
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');
             $table->string('file_path');
+            $table->string('image_file_path');
             $table->timestamps();
 
             $table->foreign('category_id')

@@ -156,4 +156,6 @@ class ShopItemController extends Controller
 
         return response()->json(['message' => 'Shop item deleted successfully'], 200);
     }
+
+
 }
