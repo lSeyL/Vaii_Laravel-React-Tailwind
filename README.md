@@ -32,8 +32,8 @@ Before you begin, ensure you have the following installed on your system:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/3d-models-eshop.git
-cd 3d-models-eshop
+git clone https://github.com/lSeyL/Vaii_Laravel-React-Tailwind.git
+cd Vaii_Laravel-React-Tailwind
 ```
 
 #
