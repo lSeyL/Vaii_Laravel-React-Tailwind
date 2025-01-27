@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // Add more users up to 10 as needed
+            
         ]);
     }
 }

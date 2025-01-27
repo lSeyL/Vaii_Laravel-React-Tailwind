@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../../components/UI/Loader";
 import ProductItem from "./ProductItem";
+import api from "../../services/api";
 
 function Products() {
     const [products, setProducts] = useState([]);
@@ -12,9 +13,7 @@ function Products() {
             setIsLoading(true);
             try {
                 await new Promise((resolve) => setTimeout(resolve, 10));
-                const response = await axios.get(
-                    "http://127.0.0.1:8000/api/shop-items"
-                );
+                const response = await api.get("/api/shop-items");
                 console.log("API Response:", response.data);
                 setProducts(response.data.data);
             } catch (error) {

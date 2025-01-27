@@ -59,15 +59,15 @@ const router = createBrowserRouter([
                 path: "/order-confirmation",
                 element: <OrderConfirmation />,
             },
-            {
-                path: "/login",
-                element: <Login />,
-            },
-            {
-                path: "/signup",
-                element: <Signup />,
-            },
         ],
+    },
+    {
+        path: "/login",
+        element: <Login />,
+    },
+    {
+        path: "/signup",
+        element: <Signup />,
     },
     {
         path: "*",
