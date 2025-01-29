@@ -15,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::query()->orderBy('id','desc')->paginate(15));
+        $users = User::with(['purchasedShopItems', 'orders'])->paginate(10);
+        return UserResource::collection($users);
     }
 
     /**
@@ -23,11 +24,29 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
-        $users = User::create($data);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        $user->load(['purchasedShopItems', 'orders']);
 
-        return response(new UserResource($user),201);
+
+        return (new UserResource($user))
+                ->additional(['message' => 'User created successfully'])
+                ->response()
+                ->setStatusCode(201);
     }
 
     /**
@@ -35,6 +54,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user = User::with(['purchasedShopItems', 'orders'])->find($id);
+            
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         return new UserResource($user);
     }
 
@@ -43,13 +68,38 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->validated();
-        if(isset($data['password'])){
-            $data['password'] = bcrypt($data['password']);
+        $user = User::with(['purchasedShopItems', 'orders'])->find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
-        $user->update($data);
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|required|string|min:8|confirmed',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+        $user->load(['purchasedShopItems', 'orders']);
 
-        return new UserResource($user);
+
+        return (new UserResource($user))
+                ->additional(['message' => 'User updated successfully'])
+                ->response()
+                ->setStatusCode(200);
     }
 
     /**
@@ -57,7 +107,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
         $user->delete();
-        return response("", 204);
+
+        return response()->json(['message' => 'User deleted successfully'], 200);
     }
 }
