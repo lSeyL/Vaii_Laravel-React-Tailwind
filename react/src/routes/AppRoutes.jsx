@@ -12,7 +12,11 @@ import OrderConfirmation from "../pages/Cart/OrderConfirmation";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Login/Signup";
 import Faq from "../pages/About/Faq";
-import UserProfile from "../pages/UserProfile";
+import UserProfile from "../pages/User/UserProfile";
+import UserOrders from "../pages/User/UserOrders";
+import UserFavourites from "../pages/User/UserFavourites";
+import UserAccountSettings from "../pages/User/UserAccountSettings";
+import UserLogout from "../pages/User/UserLogout";
 
 const router = createBrowserRouter([
     {
@@ -48,16 +52,26 @@ const router = createBrowserRouter([
                 element: <Cart />,
             },
             {
-                path: "/checkout",
-                element: <Checkout />,
-            },
-            {
                 path: "/profile",
                 element: <UserProfile />,
-            },
-            {
-                path: "/order-confirmation",
-                element: <OrderConfirmation />,
+                children: [
+                    {
+                        path: "my-orders",
+                        element: <UserOrders />,
+                    },
+                    {
+                        path: "my-favourites",
+                        element: <UserFavourites />,
+                    },
+                    {
+                        path: "account-settings",
+                        element: <UserAccountSettings />,
+                    },
+                    {
+                        path: "logout",
+                        element: <UserLogout />,
+                    },
+                ],
             },
         ],
     },
@@ -68,6 +82,10 @@ const router = createBrowserRouter([
     {
         path: "/signup",
         element: <Signup />,
+    },
+    {
+        path: "/checkout",
+        element: <Checkout />,
     },
     {
         path: "*",

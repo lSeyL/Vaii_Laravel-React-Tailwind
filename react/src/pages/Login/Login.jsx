@@ -34,16 +34,13 @@ function Login() {
             */
     return (
         <div className="flex items-center justify-center min-h-screen">
-            {/* Card */}
             <div
                 className="bg-white bg-cover bg-center rounded-2xl shadow-lg w-full max-w-7xl p-8 md:p-12 flex flex-col lg:flex-row overflow-hidden"
                 style={{
                     backgroundImage: "url('/LoginBackground.png')",
                 }}
             >
-                {/* Left Side - Form */}
                 <div className="w-full lg:w-1/2 p-6 md:p-10 flex flex-col order-2 lg:order-1 bg-white/ rounded-lg">
-                    {/* Home Link */}
                     <Link
                         to="/"
                         className="flex items-center text-black hover:text-gray-400 transition duration-300 mb-6"

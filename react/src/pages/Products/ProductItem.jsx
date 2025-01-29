@@ -12,7 +12,8 @@ function ProductItem({ product }) {
             to={`/products/${product.category.name}/${generateSlug(
                 product.name
             )}`}
-            className="border rounded-[25px] shadow-lg h-96 w-96 relative overflow-hidden group"
+            state={{ product }}
+            className="border rounded-[25px] shadow-lg h-96 w-full max-w-[400px] relative overflow-hidden group mx-auto"
         >
             <img
                 src={product.image_file_path}
@@ -33,8 +34,8 @@ function ProductItem({ product }) {
 
             <div className="absolute bottom-0 left-0 w-full bg-white p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
                 <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold">{product.name}</h2>
-                    <p className="text-2xl font-bold">{product.price} €</p>
+                    <h2 className="text-xl font-bold">{product.name}</h2>
+                    <p className="text-xl font-bold">{product.price} €</p>
                 </div>
                 <p className="text-gray-600 mt-1">{product.description}</p>
             </div>

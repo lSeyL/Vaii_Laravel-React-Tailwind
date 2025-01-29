@@ -1,15 +1,50 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { HiOutlineHeart } from "react-icons/hi2";
-
+import { useGlobalContext } from "../../providers/globalProvider";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function ProductDetails() {
+    const { state } = useLocation();
     const { category, slug } = useParams(); // Get the category and slug from the URL
     const [product, setProduct] = useState(null);
     const [error, setError] = useState(null);
     const [mainImage, setMainImage] = useState(null);
 
-    // Function to generate slug from product name
+    const { cart, addToCart, favorites, addToFavorites, removeFromFavorites } =
+        useGlobalContext();
+
+    const isInCart = cart.some((item) => item.id === product?.id);
+    const isInFavorites = favorites.some((item) => item.id === product?.id);
+    const handleAddToCart = () => {
+        if (!isInCart) {
+            addToCart(product);
+            toast.success(`${product.name} added to the cart!`);
+        }
+    };
+
+    const handleToggleFavorite = () => {
+        if (isInFavorites) {
+            removeFromFavorites(product.id);
+            toast.info(`${product.name} removed from favorites.`);
+        } else {
+            addToFavorites(product);
+            toast.success(`${product.name} added to favorites!`);
+        }
+    };
+
+    const navigate = useNavigate();
+
+    const handleBuyNow = () => {
+        if (!isInCart) {
+            addToCart(product);
+            toast.success(`${product.name} added to the cart!`);
+        }
+
+        navigate("/cart");
+    };
+
     const generateSlug = (text) =>
         text
             .toLowerCase()
@@ -18,10 +53,10 @@ function ProductDetails() {
             .trim();
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchProduct = async () => {
             try {
                 const response = await fetch(
-                    "http://127.0.0.1:8000/api/shop-items"
+                    `http://127.0.0.1:8000/api/shop-items/`
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch products");
@@ -29,10 +64,11 @@ function ProductDetails() {
 
                 const data = await response.json();
 
-                // Filter the product based on category and slug
+                // Find the product based on category and slug
                 const foundProduct = data.data.find(
                     (item) =>
-                        item.category.name === category &&
+                        item.category.name.toLowerCase() ===
+                            category.toLowerCase() &&
                         generateSlug(item.name) === slug
                 );
 
@@ -40,7 +76,7 @@ function ProductDetails() {
                     throw new Error("Product not found");
                 }
 
-                // Safely create galleryImages with placeholders
+                // Prepare galleryImages with placeholders if needed
                 const galleryImages = [
                     foundProduct.image_file_path,
                     "https://via.placeholder.com/150?text=Placeholder+1",
@@ -49,16 +85,15 @@ function ProductDetails() {
                     ...(foundProduct.galleryImages || []),
                 ];
 
-                // Set the product and default main image
                 setProduct({ ...foundProduct, galleryImages });
-                setMainImage(foundProduct.image_file_path); // Default to the main image
+                setMainImage(foundProduct.image_file_path);
             } catch (err) {
                 setError(err.message);
             }
         };
 
-        fetchProducts();
-    }, [category, slug]); // Dependency array to refetch if category or slug changes
+        fetchProduct();
+    }, [category, slug]);
 
     if (error) {
         return <p>Error: {error}</p>;
@@ -114,31 +149,36 @@ function ProductDetails() {
                     </p>
                 </div>
                 <div className="flex justify-center gap-4 mt-auto mb-5">
-                    {/* Buy Now Button */}
                     <button
-                        onClick={() => console.log("Buy Now")}
+                        onClick={() => handleBuyNow()}
                         className="bg-black text-white p-3 rounded-full hover:bg-gray-800 transition flex items-center justify-center min-w-[120px]"
                     >
                         <span>Buy Now</span>
                     </button>
 
-                    {/* Add to Cart Button */}
                     <button
-                        onClick={() => console.log("Add to Cart")}
-                        className="border border-black bg-black p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center"
+                        onClick={handleAddToCart}
+                        disabled={isInCart}
+                        className={`border ${
+                            isInCart ? "bg-gray-300" : "bg-black"
+                        } text-white p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center`}
                     >
                         <HiOutlineShoppingBag
                             className="w-6 h-6"
-                            color="white"
+                            color={isInCart ? "gray" : "white"}
                         />
                     </button>
 
-                    {/* Add to Favourites Button */}
                     <button
-                        onClick={() => console.log("Add to Favourites")}
-                        className="border border-black bg-black p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center"
+                        onClick={handleToggleFavorite}
+                        className={`border ${
+                            isInFavorites ? "bg-red-500" : "bg-black"
+                        } text-white p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center`}
                     >
-                        <HiOutlineHeart className="w-6 h-6" color="white" />
+                        <HiOutlineHeart
+                            className="w-6 h-6"
+                            color={isInFavorites ? "white" : "gray"}
+                        />
                     </button>
                 </div>
             </div>
