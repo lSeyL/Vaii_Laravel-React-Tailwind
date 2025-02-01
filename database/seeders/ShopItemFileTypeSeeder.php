@@ -14,18 +14,26 @@ class ShopItemFileTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('shop_item_file_types')->insert([
-            ['shop_item_id' => 1, 'file_type_id' => 1],
-            ['shop_item_id' => 1, 'file_type_id' => 2],
-            ['shop_item_id' => 2, 'file_type_id' => 3],
-            ['shop_item_id' => 3, 'file_type_id' => 3],
-            ['shop_item_id' => 3, 'file_type_id' => 1],
-            ['shop_item_id' => 2, 'file_type_id' => 1],
-            ['shop_item_id' => 4, 'file_type_id' => 2],
-            ['shop_item_id' => 5, 'file_type_id' => 1],
-            ['shop_item_id' => 6, 'file_type_id' => 2],
-            ['shop_item_id' => 5, 'file_type_id' => 2],
-            ['shop_item_id' => 7, 'file_type_id' => 2],
-        ]);
+        $data = [];
+        
+        for ($shopItemId = 1; $shopItemId <= 10; $shopItemId++) {
+            $fileTypeCount = rand(2, 5);
+            $fileTypes = array_rand(array_flip(range(1, 20)), $fileTypeCount);
+
+            if (!is_array($fileTypes)) {
+                $fileTypes = [$fileTypes];
+            }
+
+            foreach ($fileTypes as $fileTypeId) {
+                $data[] = [
+                    'shop_item_id' => $shopItemId,
+                    'file_type_id' => $fileTypeId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+        DB::table('shop_item_file_types')->insert($data);
     }
 }
+

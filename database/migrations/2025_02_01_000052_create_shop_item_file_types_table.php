@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('shop_item_file_types', function (Blueprint $table) {
             $table->bigInteger('shop_item_id')->unsigned();
             $table->bigInteger('file_type_id')->unsigned();
+            $table->timestamps();
             $table->primary(['shop_item_id', 'file_type_id']);
     
             $table->foreign('shop_item_id')

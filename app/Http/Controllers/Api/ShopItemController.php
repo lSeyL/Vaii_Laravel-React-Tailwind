@@ -161,16 +161,18 @@ class ShopItemController extends Controller
      */
     public function destroy(string $id)
     {
+        \Log::info('Finding shop item ID - ', $id);
         $shopItem = ShopItem::find($id);
 
         if (!$shopItem) {
+            \Log::info('Shop item not found', $id) ;
             return response()->json(['message' => 'Shop item not found'], 404);
         }
         if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
             Storage::disk('public')->delete($shopItem->file_path);
         }
         $shopItem->delete();
-
+        \Log::info('Shop item deleted successfully', $id);
         return response()->json(['message' => 'Shop item deleted successfully'], 200);
     }
 

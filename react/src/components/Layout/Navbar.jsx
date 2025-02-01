@@ -14,6 +14,7 @@ import { HiMiniChevronUp } from "react-icons/hi2";
 import { HiOutlineStar } from "react-icons/hi2";
 import { HiOutlineRocketLaunch } from "react-icons/hi2";
 import { HiOutlineHeart } from "react-icons/hi2";
+import { HiOutlineKey } from "react-icons/hi2";
 import { FiLogIn } from "react-icons/fi";
 import Logo from "../UI/Logo";
 import SearchBar from "../UI/SearchBar";
@@ -21,6 +22,7 @@ import { useStateContext } from "../../providers/userContext";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../providers/globalProvider";
 function Navbar() {
+  const { user } = useStateContext();
   const [isOpen, setIsOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -29,6 +31,8 @@ function Navbar() {
   const { token } = useStateContext();
   const { cart } = useGlobalContext();
   const cartCount = cart.length;
+
+  //console.log("user: " + user?.name + ", role: " + user?.role);
   const handleSearchIconClick = () => {
     console.log("search");
     setIsSearching((prevState) => !prevState);
@@ -99,6 +103,11 @@ function Navbar() {
           >
             <FiLogIn size={32} />
           </button>
+        )}
+        {user?.role === "admin" && (
+          <NavItem to="/admin">
+            <HiOutlineKey size={32} />
+          </NavItem>
         )}
       </div>
       <div
@@ -212,6 +221,12 @@ function Navbar() {
             <HiOutlineUser size={34} />
             <span> Profile</span>
           </NavItem>
+          {user?.role === "admin" && (
+            <NavItem to="/admin" onClick={toggleMenu} phone={true}>
+              <HiOutlineKey size={34} />
+              <span>Admin</span>
+            </NavItem>
+          )}
         </nav>
       </div>
     </header>

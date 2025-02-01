@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('file_types', function (Blueprint $table) {
             $table->id();
             $table->string('type', 50)->unique();
-            $table->timestamps();
         });
     }
 

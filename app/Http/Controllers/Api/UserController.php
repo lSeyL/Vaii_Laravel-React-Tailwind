@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -54,7 +55,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user = User::with(['purchasedShopItems', 'orders'])->find($id);
+        $user->load(['purchasedShopItems', 'orders']);
             
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
@@ -68,38 +69,26 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user = User::with(['purchasedShopItems', 'orders'])->find($id);
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
-            'password' => 'sometimes|required|string|min:8|confirmed',
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'old_password' => 'nullable|string|min:6',
+            'new_password' => 'nullable|string|min:6|different:old_password',
         ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], 422);
+    
+        if ($request->filled('old_password') && !Hash::check($request->old_password, $user->password)) {
+            return response()->json(['message' => 'Old password is incorrect'], 400);
         }
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
-        if ($request->has('email')) {
-            $user->email = $request->email;
-        }
-        if ($request->has('password')) {
-            $user->password = Hash::make($request->password);
-        }
-        $user->save();
-        $user->load(['purchasedShopItems', 'orders']);
-
-
-        return (new UserResource($user))
-                ->additional(['message' => 'User updated successfully'])
-                ->response()
-                ->setStatusCode(200);
+    
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->filled('new_password') ? Hash::make($request->new_password) : $user->password,
+        ]);
+    
+        return response()->json(['user' => $user]);
     }
 
     /**

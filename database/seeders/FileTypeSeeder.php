@@ -12,10 +12,28 @@ class FileTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $fileTypes = ['fbx', 'obj', 'stl'];
+        DB::table('file_types')->insert([
+            ['type' => 'fbx'],  
+            ['type' => 'obj'],  
+            ['type' => 'stl'],  
+            ['type' => 'glb'],  
+            ['type' => 'gltf'], 
+            ['type' => 'blend'],
+            ['type' => 'dae'],  
+            ['type' => '3ds'],  
+            ['type' => 'max'],  
+            ['type' => 'c4d'],  
+            ['type' => 'x3d'],  
+            ['type' => 'vrml'], 
+            ['type' => 'ply'],  
+            ['type' => 'usd'],  
+            ['type' => 'usdz'], 
+            ['type' => 'step'], 
+            ['type' => 'iges'],
+            ['type' => 'bvh'],  
+            ['type' => 'abc'], 
+            ['type' => 'vox'], 
+        ]);
 
-        foreach ($fileTypes as $type) {
-            FileType::create(['type' => $type]);
-        }
     }
 }

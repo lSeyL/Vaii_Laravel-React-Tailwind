@@ -19,11 +19,12 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'purchased_shop_items_count' => $this->purchasedShopItems()->count(),
-            'orders_count' => $this->orders()->count(),
+            'role' => $this->role->name,
+            'purchased_shop_items_count' => $this->resource->purchasedShopItems?->count() ?? 0,
+            'orders_count' => $this->resource->orders?->count() ?? 0,
+            'orders' => OrderResource::collection($this->whenLoaded('orders')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
-            'orders' => OrderResource::collection($this->whenLoaded('orders')),
         ];
     }
 }

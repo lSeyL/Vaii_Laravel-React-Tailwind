@@ -8,7 +8,7 @@ function NavItem({ to, children, dot = false, onClick, phone = false }) {
       to={to}
       onClick={onClick}
       className={({ isActive: navIsActive }) =>
-        `px-3 py-2 font-roboto font-normal transition-all duration-300 ease-in-out ${
+        ` px-1 py-2 font-roboto font-normal transition-all duration-300 ease-in-out ${
           phone ? "flex items-center space-x-2" : ""
         } ${
           navIsActive
