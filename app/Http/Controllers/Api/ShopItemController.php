@@ -22,6 +22,31 @@ class ShopItemController extends Controller
         return ShopItemResource::collection($shopItems);
     }
 
+    public function search(Request $request)
+    {
+        \Log::info('Search function triggered', ['query' => $request->all()]);
+        $query = ShopItem::with('category', 'fileTypes')->withCount('purchasedByUsers');
+
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $query->where('name', 'LIKE', "%{$name}%");
+        }
+
+        if ($request->has('category')) {
+            $category = $request->input('category');
+            $query->whereHas('category', function ($q) use ($category) {
+                $q->where('name', 'LIKE', "%{$category}%");
+            });
+        }
+
+        if ($request->has('min_price') && $request->has('max_price')) {
+            $query->whereBetween('price', [$request->input('min_price'), $request->input('max_price')]);
+        }
+
+        $shopItems = $query->paginate(9);
+        return ShopItemResource::collection($shopItems);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

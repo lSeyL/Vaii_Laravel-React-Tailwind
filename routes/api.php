@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 //Verejne
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/shop-items/search', [ShopItemController::class, 'search']);
 Route::apiResource('shop-items', ShopItemController::class); 
+
 
 //Pre logged userov
 Route::middleware('auth:sanctum')->group(function () {
