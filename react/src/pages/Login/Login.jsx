@@ -1,32 +1,39 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import api from "../../services/api";
 import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi";
 import { HiArrowSmallLeft } from "react-icons/hi2";
+import { useStateContext } from "../../providers/userContext";
+
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const emailRef = createRef();
+  const passwordRef = createRef();
+  const { setUser, setToken } = useStateContext();
+  const [message, setMessage] = useState(null);
+  const navigate = useNavigate();
+  const onSubmit = (ev) => {
+    ev.preventDefault();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      console.log("token: ");
-      const response = await api.post("/login", {
-        email,
-        password,
+    const payload = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+    api
+      .post("/login", payload)
+      .then(({ data }) => {
+        setUser(data.user);
+        setToken(data.token);
+        navigate("/");
+        console.log("User logged in.");
+      })
+      .catch((err) => {
+        console.log("User error");
+        const response = err.response;
+        if (response && response.status === 422) {
+          setMessage(response.data.message);
+        }
       });
-
-      localStorage.setItem("token", response.data.token);
-
-      alert("Login successful!");
-    } catch (err) {
-      console.error("Login error:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "An error occurred.");
-    }
   };
   /*
 
@@ -34,7 +41,7 @@ function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div
-        className="bg-white bg-cover bg-center rounded-2xl shadow-lg w-full max-w-7xl p-8 md:p-12 flex flex-col lg:flex-row overflow-hidden"
+        className="bg-white bg-cover bg-center rounded-2xl shadow-lg w-full max-w-7xl p-8 md:p-12 flex flex-col lg:flex-row overflow-hidden animate-fadeInUp"
         style={{
           backgroundImage: "url('/LoginBackground.png')",
         }}
@@ -57,7 +64,7 @@ function Login() {
               Create a new account
             </Link>
           </p>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={onSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -70,6 +77,7 @@ function Login() {
                 type="email"
                 className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 duration-300 focus:ring-black focus:outline-none"
                 placeholder="Enter your email"
+                ref={emailRef}
               />
             </div>
             <div>
@@ -84,6 +92,7 @@ function Login() {
                 type="password"
                 className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-black focus:outline-none"
                 placeholder="Enter your password"
+                ref={passwordRef}
               />
             </div>
             <div className="flex justify-center">
@@ -95,39 +104,27 @@ function Login() {
               </button>
             </div>
           </form>
-          {/* Divider */}
+
           <div className="flex items-center justify-between mt-8">
             <div className="h-[1px] bg-gray-300 flex-1"></div>
             <span className="px-3 text-gray-500 text-sm">OR</span>
             <div className="h-[1px] bg-gray-300 flex-1"></div>
           </div>
 
-          {/* Social Login Buttons */}
           <div className="flex justify-center gap-6 mt-6">
-            {/* Google Icon Button */}
             <button className="flex items-center justify-center bg-red-500 text-white p-3 rounded-full hover:bg-red-600 transition">
               <FaGoogle className="w-6 h-6" />
             </button>
 
-            {/* Facebook Icon Button */}
             <button className="flex items-center justify-center bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition">
               <FaFacebook className="w-6 h-6" />
             </button>
 
-            {/* Apple Icon Button */}
             <button className="flex items-center justify-center bg-gray-800 text-white p-3 rounded-full hover:bg-black transition">
               <FaApple className="w-6 h-6" />
             </button>
           </div>
         </div>
-
-        {/* Background Image (Right Side) */}
-        <div
-          className="hidden lg:block w-1/2 bg-cover bg-center order-1 lg:order-2"
-          style={{
-            backgroundImage: `url('https://via.placeholder.com/600x800?text=Background+Image')`,
-          }}
-        ></div>
       </div>
     </div>
   );

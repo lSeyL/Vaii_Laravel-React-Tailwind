@@ -4,48 +4,65 @@
 @tailwind utilities;
 
 :root {
-    --font-roboto: "Roboto", sans-serif;
-    --color-primary: #007bff;
-    --color-secondary: #0056b3;
-    --color-accent: #74c0fc;
-    --color-neutral-light: #f8f9fa;
-    --color-neutral: #f4f4f4;
-    --color-neutral-dark: #343a40;
+  --font-roboto: "Roboto", sans-serif;
+  --color-primary: #007bff;
+  --color-secondary: #0056b3;
+  --color-accent: #74c0fc;
+  --color-neutral-light: #f8f9fa;
+  --color-neutral: #f4f4f4;
+  --color-neutral-dark: #343a40;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 body {
-    @apply font-roboto;
+  @apply font-roboto;
 }
 
 @layer components {
-    .loader {
-        width: 45px;
-        aspect-ratio: 0.75;
-        --c: no-repeat linear-gradient(theme(colors.stone.800) 0 0);
-        background: var(--c) 0% 50%, var(--c) 50% 50%, var(--c) 100% 50%;
-        background-size: 20% 50%;
-        animation: loading 1s infinite linear;
-    }
+  .loader {
+    width: 45px;
+    aspect-ratio: 0.75;
+    --c: no-repeat linear-gradient(theme(colors.stone.800) 0 0);
+    background: var(--c) 0% 50%, var(--c) 50% 50%, var(--c) 100% 50%;
+    background-size: 20% 50%;
+    animation: loading 1s infinite linear;
+  }
 }
 
 @keyframes loading {
-    20% {
-        background-position: 0% 0%, 50% 50%, 100% 50%;
-    }
-    40% {
-        background-position: 0% 100%, 50% 0%, 100% 50%;
-    }
-    60% {
-        background-position: 0% 50%, 50% 100%, 100% 0%;
-    }
-    80% {
-        background-position: 0% 50%, 50% 50%, 100% 100%;
-    }
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
 }
+@keyframes fadeInUp {
+  from {
+    opacity: 0.5;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-fadeInUp {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+}
+
 /*
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

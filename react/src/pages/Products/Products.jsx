@@ -32,7 +32,7 @@ function Products() {
       ) : products.length === 0 ? (
         <p className="text-center">No products found</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 w-full mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 w-full lg:mt-10 lg:mb-10">
           {products.map((product) => (
             <ProductItem key={product.id} product={product} />
           ))}

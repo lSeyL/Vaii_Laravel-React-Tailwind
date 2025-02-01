@@ -14,196 +14,208 @@ import { HiMiniChevronUp } from "react-icons/hi2";
 import { HiOutlineStar } from "react-icons/hi2";
 import { HiOutlineRocketLaunch } from "react-icons/hi2";
 import { HiOutlineHeart } from "react-icons/hi2";
-
+import { FiLogIn } from "react-icons/fi";
 import Logo from "../UI/Logo";
 import SearchBar from "../UI/SearchBar";
+import { useStateContext } from "../../providers/userContext";
+import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../../providers/globalProvider";
 function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [isSearching, setIsSearching] = useState(false);
-    const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
-    const handleSearchIconClick = () => {
-        console.log("search");
-        setIsSearching((prevState) => !prevState);
-    };
-    const toggleMenu = () => {
-        setIsOpen((prevState) => !prevState);
-    };
-    const toggleCatalogMenu = () => {
-        setIsCatalogOpen((prevState) => !prevState);
-    };
+  const navigate = useNavigate();
+  const { token } = useStateContext();
+  const { cart } = useGlobalContext();
+  const cartCount = cart.length;
+  const handleSearchIconClick = () => {
+    console.log("search");
+    setIsSearching((prevState) => !prevState);
+  };
 
-    return (
-        <header className="flex items-center justify-between p-4 text-black sticky top-0 bg-white shadow-md z-50">
-            <div className="text-xl font-bold">
-                <Logo />
-            </div>
+  const handleLoginRedirect = () => {
+    navigate("/login");
+  };
 
-            <nav
-                className={`bg-neutral space-x-4 hidden py-2 px-2 rounded-full ${
-                    isSearching ? "md:hidden lg:flex" : "md:flex"
-                }`}
-            >
-                <NavItem to="/" dot={true}>
-                    Home
-                </NavItem>
-                <NavItem to="/products" dot={true}>
-                    Catalog
-                </NavItem>
-                <NavItem to="/about" dot={true}>
-                    About
-                </NavItem>
-                <NavItem to="/faq" dot={true}>
-                    FAQ
-                </NavItem>
-                <NavItem to="/contact" dot={true}>
-                    Contact
-                </NavItem>
-            </nav>
-            <div className="md:flex space-x-4 hidden ">
-                {/*<HiOutlineHeart size={32} /> */}
-                <SearchBar
-                    onSearchIconClick={handleSearchIconClick}
-                    isOpen={isSearching}
-                    iconSize={32}
-                ></SearchBar>
+  const toggleMenu = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+  const toggleCatalogMenu = () => {
+    setIsCatalogOpen((prevState) => !prevState);
+  };
 
-                <NavItem to="/cart">
-                    <HiOutlineShoppingCart size={32} />
-                </NavItem>
+  return (
+    <header className="flex items-center justify-between p-4 text-black sticky top-0 bg-white shadow-md z-50">
+      <div className="text-xl font-bold">
+        <Logo />
+      </div>
 
-                <NavItem to="/profile">
-                    <HiOutlineUser size={32} />
-                </NavItem>
-            </div>
-            <div
-                onClick={toggleMenu}
-                className={`
+      <nav
+        className={`bg-neutral space-x-4 hidden py-2 px-2 rounded-full ${
+          isSearching ? "md:hidden lg:flex" : "md:flex"
+        }`}
+      >
+        <NavItem to="/" dot={true}>
+          Home
+        </NavItem>
+        <NavItem to="/products" dot={true}>
+          Catalog
+        </NavItem>
+        <NavItem to="/about" dot={true}>
+          About
+        </NavItem>
+        <NavItem to="/faq" dot={true}>
+          FAQ
+        </NavItem>
+        <NavItem to="/contact" dot={true}>
+          Contact
+        </NavItem>
+      </nav>
+      <div className="md:flex space-x-4 hidden ">
+        {/*<HiOutlineHeart size={32} /> */}
+        <SearchBar
+          onSearchIconClick={handleSearchIconClick}
+          isOpen={isSearching}
+          iconSize={32}
+        ></SearchBar>
+
+        <NavItem to="/cart">
+          <HiOutlineShoppingCart size={32} />
+          {cartCount > 0 && (
+            <span className="absolute top-11 right-[70px] bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </NavItem>
+        {token ? (
+          <NavItem to="/profile">
+            <HiOutlineUser size={32} />
+          </NavItem>
+        ) : (
+          <button
+            onClick={handleLoginRedirect}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
+            <FiLogIn size={32} />
+          </button>
+        )}
+      </div>
+      <div
+        onClick={toggleMenu}
+        className={`
           fixed inset-0      
           backdrop-blur-[2px]    
           z-[1000]
           transition-all duration-300 ease-in-out
           ${
-              isOpen
-                  ? "opacity-100 pointer-events-auto"
-                  : "opacity-0 pointer-events-none"
+            isOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
           }
         `}
-            />
+      />
 
-            <div className="md:hidden z-[9999] top-0 stick flex align-middle space-x-4">
-                <SearchBar
-                    onSearchIconClick={handleSearchIconClick}
-                    isOpen={isSearching}
-                    iconSize={32}
-                ></SearchBar>
-                <button
-                    onClick={toggleMenu}
-                    className={`focus:outline-none z-60 transition-all duration-300 ${
-                        isOpen
-                            ? `bg-neutral rounded-full py-1 px-1 border-2 border-stone-800 hover:bg-stone-200`
-                            : ""
-                    }`}
-                >
-                    <>
-                        {isOpen ? (
-                            <HiXMark size={32} />
-                        ) : (
-                            <>
-                                <HiMiniBars4 size={32} />
-                            </>
-                        )}
-                    </>
-                </button>
-            </div>
+      <div className="md:hidden z-[9999] top-0 stick flex align-middle space-x-4">
+        <SearchBar
+          onSearchIconClick={handleSearchIconClick}
+          isOpen={isSearching}
+          iconSize={32}
+        ></SearchBar>
+        <button
+          onClick={toggleMenu}
+          className={`focus:outline-none z-60 transition-all duration-300 ${
+            isOpen
+              ? `bg-neutral rounded-full py-1 px-1 border-2 border-stone-800 hover:bg-stone-200`
+              : ""
+          }`}
+        >
+          <>
+            {isOpen ? (
+              <HiXMark size={32} />
+            ) : (
+              <>
+                <HiMiniBars4 size={32} />
+              </>
+            )}
+          </>
+        </button>
+      </div>
 
-            {/* Sidebar */}
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 transform md:hidden ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out bg-stone-100 shadow-md text-black w-64 p-4 z-[2000]`}
+      >
+        <nav className="flex flex-col space-y-4">
+          <NavItem to="/" onClick={toggleMenu} phone={true}>
+            <HiOutlineHome size={34} />
+            <span>Home</span>
+          </NavItem>
+          <div className="relative ">
             <div
-                className={`fixed inset-y-0 left-0 transform md:hidden ${
-                    isOpen ? "translate-x-0" : "-translate-x-full"
-                } transition-transform duration-300 ease-in-out bg-stone-100 shadow-md text-black w-64 p-4 z-[2000]`}
+              className="flex items-center justify-between cursor-pointer"
+              onClick={toggleCatalogMenu}
             >
-                <nav className="flex flex-col space-y-4">
-                    <NavItem to="/" onClick={toggleMenu} phone={true}>
-                        <HiOutlineHome size={34} />
-                        <span>Home</span>
-                    </NavItem>
-                    <div className="relative ">
-                        <div
-                            className="flex items-center justify-between cursor-pointer"
-                            onClick={toggleCatalogMenu}
-                        >
-                            <div className="flex items-center space-x-2">
-                                <NavItem
-                                    to="/products"
-                                    onClick={toggleMenu}
-                                    phone={true}
-                                >
-                                    {" "}
-                                    <HiOutlineBookOpen size={34} />
-                                    <span>Catalog</span>
-                                </NavItem>
-                            </div>
-                            <button className="focus:outline-none text:bg-accent transition-all duration-300 ease-in-out">
-                                {isCatalogOpen ? (
-                                    <HiMiniChevronUp size={26} />
-                                ) : (
-                                    <HiMiniChevronDown size={26} />
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                    <div
-                        className={`overflow-hidden transform ${
-                            isCatalogOpen
-                                ? "max-h-40 translate-y-0"
-                                : "max-h-0 -translate-y-2"
-                        } transition-all duration-500 ease-in-out`}
-                    >
-                        <div className="mt-2 ml-8 space-y-2 text-md ">
-                            <NavItem
-                                to="/popular"
-                                onClick={toggleMenu}
-                                phone={true}
-                            >
-                                <HiOutlineStar size={22} />
-                                <span>Popular</span>
-                            </NavItem>
-                            <NavItem
-                                to="/new-arrivals"
-                                onClick={toggleMenu}
-                                phone={true}
-                            >
-                                <HiOutlineRocketLaunch size={22} />
-                                <span>Downloadable</span>
-                            </NavItem>
-                        </div>
-                    </div>
-                    <NavItem to="/about" onClick={toggleMenu} phone={true}>
-                        <HiOutlineGlobeEuropeAfrica size={34} />
-                        <span>About</span>
-                    </NavItem>
-                    <NavItem to="/faq" onClick={toggleMenu} phone={true}>
-                        <HiOutlineQuestionMarkCircle size={34} />
-                        <span>FAQ</span>
-                    </NavItem>
-                    <NavItem to="/contact" onClick={toggleMenu} phone={true}>
-                        <HiOutlineEnvelope size={34} />
-                        <span>Contact</span>
-                    </NavItem>
-                    <NavItem to="/cart" onClick={toggleMenu} phone={true}>
-                        <HiOutlineShoppingCart size={34} />
-                        <span> Cart</span>
-                    </NavItem>
-                    <NavItem to="/profile" onClick={toggleMenu} phone={true}>
-                        <HiOutlineUser size={34} />
-                        <span> Profile</span>
-                    </NavItem>
-                </nav>
+              <div className="flex items-center space-x-2">
+                <NavItem to="/products" onClick={toggleMenu} phone={true}>
+                  {" "}
+                  <HiOutlineBookOpen size={34} />
+                  <span>Catalog</span>
+                </NavItem>
+              </div>
+              <button className="focus:outline-none text:bg-accent transition-all duration-300 ease-in-out">
+                {isCatalogOpen ? (
+                  <HiMiniChevronUp size={26} />
+                ) : (
+                  <HiMiniChevronDown size={26} />
+                )}
+              </button>
             </div>
-        </header>
-    );
+          </div>
+          <div
+            className={`overflow-hidden transform ${
+              isCatalogOpen
+                ? "max-h-40 translate-y-0"
+                : "max-h-0 -translate-y-2"
+            } transition-all duration-500 ease-in-out`}
+          >
+            <div className="mt-2 ml-8 space-y-2 text-md ">
+              <NavItem to="/popular" onClick={toggleMenu} phone={true}>
+                <HiOutlineStar size={22} />
+                <span>Popular</span>
+              </NavItem>
+              <NavItem to="/new-arrivals" onClick={toggleMenu} phone={true}>
+                <HiOutlineRocketLaunch size={22} />
+                <span>Downloadable</span>
+              </NavItem>
+            </div>
+          </div>
+          <NavItem to="/about" onClick={toggleMenu} phone={true}>
+            <HiOutlineGlobeEuropeAfrica size={34} />
+            <span>About</span>
+          </NavItem>
+          <NavItem to="/faq" onClick={toggleMenu} phone={true}>
+            <HiOutlineQuestionMarkCircle size={34} />
+            <span>FAQ</span>
+          </NavItem>
+          <NavItem to="/contact" onClick={toggleMenu} phone={true}>
+            <HiOutlineEnvelope size={34} />
+            <span>Contact</span>
+          </NavItem>
+          <NavItem to="/cart" onClick={toggleMenu} phone={true}>
+            <HiOutlineShoppingCart size={34} />
+            <span> Cart</span>
+          </NavItem>
+          <NavItem to="/profile" onClick={toggleMenu} phone={true}>
+            <HiOutlineUser size={34} />
+            <span> Profile</span>
+          </NavItem>
+        </nav>
+      </div>
+    </header>
+  );
 }
 
 export default Navbar;
