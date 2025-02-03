@@ -1,10 +1,14 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../../providers/userContext";
 import api from "../../services/api";
 function UserProfile() {
-  const { user, setUser, setToken } = useStateContext();
+  const { user, setUser, setToken, token } = useStateContext();
   const navigate = useNavigate();
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
   const handleLogout = async () => {
     try {
       await api.post("/logout");
@@ -16,6 +20,7 @@ function UserProfile() {
       console.error("Logout failed:", error);
     }
   };
+  console.log("User: " + user?.name + ", role: " + user?.role);
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
@@ -24,6 +29,12 @@ function UserProfile() {
           My Profile
         </h2>
         <nav className="space-y-4">
+          <Link
+            to=""
+            className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-center md:text-left"
+          >
+            Account Settings
+          </Link>
           <Link
             to="my-orders"
             className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-center md:text-left"
@@ -45,7 +56,6 @@ function UserProfile() {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 bg-white shadow-lg rounded-lg m-6 p-8">
         <Outlet />
       </main>

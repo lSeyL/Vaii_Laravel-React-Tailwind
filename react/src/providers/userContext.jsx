@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext({
   currentUser: null,
@@ -10,9 +10,19 @@ const UserContext = createContext({
 });
 
 export const ContextProvider = ({ children }) => {
-  const [user, setUser] = useState({});
   const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
   const [notification, _setNotification] = useState("");
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("USER");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("USER", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("USER");
+    }
+  }, [user]);
 
   const setToken = (token) => {
     _setToken(token);
@@ -46,6 +56,7 @@ export const ContextProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
 export const useStateContext = () => {
   return useContext(UserContext);
 };

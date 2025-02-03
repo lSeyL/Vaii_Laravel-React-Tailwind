@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ShopItemController;
+use App\Http\Controllers\Api\UserShopItemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -27,12 +28,24 @@ Route::apiResource('shop-items', ShopItemController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile-update', [UserController::class, 'update']);
+    Route::delete('delete-account', [UserController::class, 'userDelete']);
+
     Route::get('/user', function (Request $request) {
         return new \App\Http\Resources\UserResource($request->user());
     });
+    Route::post('/purchase', [UserShopItemController::class, 'purchaseItems']); 
+    Route::get('/my-orders', [UserShopItemController::class, 'getUserPurchases']); 
 
 //Admin routy
     Route::middleware('admin')->group(function () {
-        Route::apiResource('/users', UserController::class); 
+        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
+        Route::apiResource('users', UserController::class); 
+
+        Route::post('/shop-items', [ShopItemController::class, 'store']);
+        Route::put('/shop-items/{id}', [ShopItemController::class, 'update']);
+        Route::delete('/shop-items/{id}', [ShopItemController::class, 'destroy']);
+        //Route::apiResource('shop-items', ShopItemController::class); 
+
     });
 });

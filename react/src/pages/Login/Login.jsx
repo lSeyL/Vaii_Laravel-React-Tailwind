@@ -1,24 +1,41 @@
 import React, { createRef, useState } from "react";
 import api from "../../services/api";
 import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi";
 import { HiArrowSmallLeft } from "react-icons/hi2";
 import { useStateContext } from "../../providers/userContext";
-
+import { validateUserCredentials } from "../../utils/validation";
 function Login() {
   const emailRef = createRef();
   const passwordRef = createRef();
-  const { setUser, setToken } = useStateContext();
+  const { setUser, setToken, token } = useStateContext();
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+
+  if (token) {
+    return <Navigate to="/profile" replace />;
+  }
+  const handleInputChange = () => {
+    if (message) {
+      setMessage(null);
+    }
+  };
+
   const onSubmit = (ev) => {
     ev.preventDefault();
-
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const error = validateUserCredentials(email, password);
+    if (error) {
+      setMessage(error);
+      return;
+    }
     const payload = {
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
+      email,
+      password,
     };
+
     api
       .post("/login", payload)
       .then(({ data }) => {
@@ -28,7 +45,7 @@ function Login() {
         console.log("User logged in.");
       })
       .catch((err) => {
-        console.log("User error");
+        console.log("User login error");
         const response = err.response;
         if (response && response.status === 422) {
           setMessage(response.data.message);
@@ -46,7 +63,7 @@ function Login() {
           backgroundImage: "url('/LoginBackground.png')",
         }}
       >
-        <div className="w-full lg:w-1/2 p-6 md:p-10 flex flex-col order-2 lg:order-1 bg-white/ rounded-lg">
+        <div className="w-full lg:w-1/2 p-6 md:w-2/3 sm:w-5/6 md:p-10 sm:p-10 flex flex-col order-2 lg:order-1 bg-white/ rounded-lg">
           <Link
             to="/"
             className="flex items-center text-black hover:text-gray-400 transition duration-300 mb-6"
@@ -64,7 +81,13 @@ function Login() {
               Create a new account
             </Link>
           </p>
-          <form className="space-y-4" onSubmit={onSubmit}>
+          {message && (
+            <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm font-medium border border-red-400 mb-4">
+              {message}
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={onSubmit} noValidate>
             <div>
               <label
                 htmlFor="email"
@@ -77,6 +100,7 @@ function Login() {
                 type="email"
                 className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 duration-300 focus:ring-black focus:outline-none"
                 placeholder="Enter your email"
+                onChange={handleInputChange}
                 ref={emailRef}
               />
             </div>
@@ -92,6 +116,7 @@ function Login() {
                 type="password"
                 className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-black focus:outline-none"
                 placeholder="Enter your password"
+                onChange={handleInputChange}
                 ref={passwordRef}
               />
             </div>

@@ -44,10 +44,12 @@ function UserAccountSettings() {
       setLoading(false);
     }
   };
+
   const confirmDelete = async () => {
     setDeleting(true);
     try {
       await api.delete("/delete-account");
+      console.log("user name " + user?.name);
       setUser(null);
       setToken(null);
       navigate("/");
@@ -77,7 +79,6 @@ function UserAccountSettings() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name
@@ -92,7 +93,6 @@ function UserAccountSettings() {
           />
         </div>
 
-        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Email
@@ -107,7 +107,6 @@ function UserAccountSettings() {
           />
         </div>
 
-        {/* Password Change Section */}
         <div className="border-t pt-4">
           <h3 className="text-lg font-semibold text-gray-600">
             Change Password
@@ -142,11 +141,10 @@ function UserAccountSettings() {
           </div>
         </div>
 
-        {/* Save & Delete Buttons */}
         <div className="flex justify-between items-center mt-4">
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)} // 🔹 Open modal on click
+            onClick={() => setIsModalOpen(true)}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
             Delete Account
@@ -161,7 +159,6 @@ function UserAccountSettings() {
         </div>
       </form>
 
-      {/* 🔹 Modal (Placed Outside the Form) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">

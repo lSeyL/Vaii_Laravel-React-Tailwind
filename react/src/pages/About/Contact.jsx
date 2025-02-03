@@ -12,12 +12,12 @@ function Contact() {
         <div className="bg-blue-50/0 p-10 md:p-12 flex-1">
           <h1 className="text-4xl font-bold text-gray-800 mb-6">Contact Us</h1>
           <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-            Email, call, or complete the form to reach out to us. We’re here to
-            help with any questions or inquiries.
+            Email or complete the form to reach out to us. We’re here to help
+            with any questions or inquiries.
           </p>
           <p className="text-gray-700 font-medium text-lg">
             <span className="font-bold">Email: </span>
-            info@example.com
+            info@polyhaven.com
           </p>
           <p className="text-gray-700 font-medium text-lg">
             <span className="font-bold">Phone: </span>

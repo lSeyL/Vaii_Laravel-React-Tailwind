@@ -24,6 +24,7 @@ class ShopItemController extends Controller
 
     public function search(Request $request)
     {
+        $perPage = $request->input('per_page', 9);
         \Log::info('Search function triggered', ['query' => $request->all()]);
         $query = ShopItem::with('category', 'fileTypes')->withCount('purchasedByUsers');
 
@@ -42,8 +43,7 @@ class ShopItemController extends Controller
         if ($request->has('min_price') && $request->has('max_price')) {
             $query->whereBetween('price', [$request->input('min_price'), $request->input('max_price')]);
         }
-
-        $shopItems = $query->paginate(9);
+        $shopItems = $query->paginate($perPage);
         return ShopItemResource::collection($shopItems);
     }
 
@@ -52,45 +52,52 @@ class ShopItemController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info("🛒 Creating new shop item", ['data' => $request->all()]);
+    
+        // ✅ Validate request (allow file_path & image_file_path)
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:shop_items,name',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'file' => 'required|file|mimes:obj,fbx,glb,glTF',
+            'file_path' => 'required|string', // ✅ File path is required
+            'image_file_path' => 'nullable|string', // ✅ Image file path is optional
             'file_type_ids' => 'required|array',
             'file_type_ids.*' => 'exists:file_types,id',
         ]);
-
+    
         if ($validator->fails()) {
+            \Log::error("❌ Validation Failed:", $validator->errors()->toArray());
             return response()->json([
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()
             ], 422);
         }
-
-        if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('shop_items', 'public');
-        } else {
-            $filePath = null;
-        }
-
+    
+        // ✅ Store product with file path and image file path
         $shopItem = ShopItem::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category_id' => $request->category_id,
-            'file_path' => $filePath,
+            'file_path' => $request->file_path,
+            'image_file_path' => $request->image_file_path ?? null, // ✅ Image file path is optional
         ]);
-
+    
+        // ✅ Attach file types
         $shopItem->fileTypes()->sync($request->file_type_ids);
-
+    
+        // ✅ Load relationships
         $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
+    
+        \Log::info("✅ Shop item created successfully", ['id' => $shopItem->id]);
+    
         return (new ShopItemResource($shopItem))
-                ->additional(['message' => 'Shop item created successfully'])
-                ->response()
-                ->setStatusCode(201);
+            ->additional(['message' => 'Shop item created successfully'])
+            ->response()
+            ->setStatusCode(201);
     }
+    
 
     /**
      * Display the specified resource.
@@ -127,79 +134,96 @@ class ShopItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $shopItem = ShopItem::find($id);
+{
+    $shopItem = ShopItem::find($id);
 
-        if (!$shopItem) {
-            return response()->json(['message' => 'Shop item not found'], 404);
-        }
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255|unique:shop_items,name,' . $id,
-            'description' => 'nullable|string',
-            'price' => 'sometimes|required|numeric|min:0',
-            'category_id' => 'sometimes|required|exists:categories,id',
-            'file' => 'nullable|file|mimes:obj,fbx,glb,glTF',
-            'file_type_ids' => 'sometimes|array',
-            'file_type_ids.*' => 'exists:file_types,id',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-        if ($request->hasFile('file')) {
-            if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
-                Storage::disk('public')->delete($shopItem->file_path);
-            }
-            $filePath = $request->file('file')->store('shop_items', 'public');
-            $shopItem->file_path = $filePath;
-        }
-        if ($request->has('name')) {
-            $shopItem->name = $request->name;
-        }
-
-        if ($request->has('description')) {
-            $shopItem->description = $request->description;
-        }
-
-        if ($request->has('price')) {
-            $shopItem->price = $request->price;
-        }
-
-        if ($request->has('category_id')) {
-            $shopItem->category_id = $request->category_id;
-        }
-        if ($request->has('file_type_ids')) {
-            $shopItem->fileTypes()->sync($request->file_type_ids);
-        }
-        $shopItem->save();
-        $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
-        return (new ShopItemResource($shopItem))
-                ->additional(['message' => 'Shop item updated successfully'])
-                ->response()
-                ->setStatusCode(200);
+    if (!$shopItem) {
+        return response()->json(['message' => 'Shop item not found'], 404);
     }
+
+    // ✅ Log incoming request data for debugging
+    \Log::info("🔄 Updating Shop Item ID: " . $shopItem->id, ['data' => $request->all()]);
+
+    // ✅ Validate request
+    $validator = Validator::make($request->all(), [
+        'name' => 'sometimes|required|string|max:255|unique:shop_items,name,' . $id,
+        'description' => 'nullable|string',
+        'price' => 'sometimes|required|numeric|min:0',
+        'category_id' => 'sometimes|required|exists:categories,id',
+        'file' => 'nullable|file|mimes:obj,fbx,glb,glTF',
+        'file_type_ids' => 'sometimes|array',
+        'file_type_ids.*' => 'exists:file_types,id',
+    ]);
+
+    if ($validator->fails()) {
+        \Log::error("❌ Validation Failed:", $validator->errors()->toArray());
+        return response()->json([
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // ✅ Handle file upload
+    if ($request->hasFile('file')) {
+        if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
+            Storage::disk('public')->delete($shopItem->file_path);
+        }
+        $filePath = $request->file('file')->store('shop_items', 'public');
+        $shopItem->file_path = $filePath;
+    }
+
+    // ✅ Only update fields that are sent
+    if ($request->has('name')) {
+        $shopItem->name = $request->name;
+    }
+    if ($request->has('description')) {
+        $shopItem->description = $request->description;
+    }
+    if ($request->has('price')) {
+        $shopItem->price = $request->price;
+    }
+    if ($request->has('category_id')) {
+        $shopItem->category_id = $request->category_id;
+    }
+    if ($request->has('file_type_ids')) {
+        $shopItem->fileTypes()->sync($request->file_type_ids);
+    }
+
+    // ✅ Save the updated shop item
+    $shopItem->save();
+
+    // ✅ Load related data and return the full updated item
+    $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
+
+    \Log::info("✅ Shop Item Updated Successfully:", $shopItem->toArray());
+
+    return (new ShopItemResource($shopItem))
+        ->additional(['message' => 'Shop item updated successfully'])
+        ->response()
+        ->setStatusCode(200);
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        \Log::info('Finding shop item ID - ', $id);
-        $shopItem = ShopItem::find($id);
-
-        if (!$shopItem) {
-            \Log::info('Shop item not found', $id) ;
-            return response()->json(['message' => 'Shop item not found'], 404);
-        }
-        if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
-            Storage::disk('public')->delete($shopItem->file_path);
-        }
-        $shopItem->delete();
-        \Log::info('Shop item deleted successfully', $id);
-        return response()->json(['message' => 'Shop item deleted successfully'], 200);
+{
+    \Log::info('🛒 Attempting to delete shop item with ID:', ['id' => $id]);
+    $shopItem = ShopItem::find($id);
+    if (!$shopItem) {
+        \Log::warning('❌ Shop item not found', ['id' => $id]);
+        return response()->json(['message' => 'Shop item not found'], 404);
     }
+    if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
+        Storage::disk('public')->delete($shopItem->file_path);
+        \Log::info('🗑️ File deleted:', ['path' => $shopItem->file_path]);
+    }
+    $shopItem->delete();
+    \Log::info('✅ Shop item deleted successfully', ['id' => $id]);
+
+    return response()->json(['message' => 'Shop item deleted successfully'], 200);
+}
 
 
 }

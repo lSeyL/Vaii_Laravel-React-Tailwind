@@ -18,6 +18,10 @@ export const GlobalProvider = ({ children }) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const [favorites, setFavorites] = useState([]);
   const addToFavorites = (item) => {
     setFavorites((prevFavorites) => [...prevFavorites, item]);
@@ -32,6 +36,7 @@ export const GlobalProvider = ({ children }) => {
     cart,
     addToCart,
     removeFromCart,
+    clearCart,
     favorites,
     addToFavorites,
     removeFromFavorites,

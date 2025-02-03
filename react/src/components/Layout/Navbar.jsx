@@ -38,10 +38,6 @@ function Navbar() {
     setIsSearching((prevState) => !prevState);
   };
 
-  const handleLoginRedirect = () => {
-    navigate("/login");
-  };
-
   const toggleMenu = () => {
     setIsOpen((prevState) => !prevState);
   };
@@ -52,12 +48,13 @@ function Navbar() {
   return (
     <header className="flex items-center justify-between p-4 text-black sticky top-0 bg-white shadow-md z-50">
       <div className="text-xl font-bold">
+        {" "}
         <Logo />
       </div>
 
       <nav
         className={`bg-neutral space-x-4 hidden py-2 px-2 rounded-full ${
-          isSearching ? "md:hidden lg:flex" : "md:flex"
+          isSearching ? "md:hidden lg:hidden xl:flex" : "md:flex"
         }`}
       >
         <NavItem to="/" dot={true}>
@@ -97,12 +94,9 @@ function Navbar() {
             <HiOutlineUser size={32} />
           </NavItem>
         ) : (
-          <button
-            onClick={handleLoginRedirect}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
+          <NavItem to="/login" onClick={toggleMenu} phone={true}>
             <FiLogIn size={32} />
-          </button>
+          </NavItem>
         )}
         {user?.role === "admin" && (
           <NavItem to="/admin">
@@ -151,7 +145,6 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 transform md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -217,10 +210,17 @@ function Navbar() {
             <HiOutlineShoppingCart size={34} />
             <span> Cart</span>
           </NavItem>
-          <NavItem to="/profile" onClick={toggleMenu} phone={true}>
-            <HiOutlineUser size={34} />
-            <span> Profile</span>
-          </NavItem>
+          {token ? (
+            <NavItem to="/profile">
+              <HiOutlineUser size={32} />
+            </NavItem>
+          ) : (
+            <NavItem to="/login" onClick={toggleMenu} phone={true}>
+              <FiLogIn size={34} />
+              <span> Login</span>
+            </NavItem>
+          )}
+
           {user?.role === "admin" && (
             <NavItem to="/admin" onClick={toggleMenu} phone={true}>
               <HiOutlineKey size={34} />

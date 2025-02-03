@@ -2,26 +2,42 @@ import React, { useRef, useState } from "react";
 
 import api from "../../services/api";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
 import { useStateContext } from "../../providers/userContext";
-
+import { validateUserCredentials } from "../../utils/validation";
 function Register() {
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
-
-  const [errors, setErrors] = useState(null);
-  const { setUser, setToken } = useStateContext();
+  const [message, setMessage] = useState(null);
+  const { setUser, setToken, token } = useStateContext();
   const navigate = useNavigate();
+  if (token) {
+    return <Navigate to="/profile" replace />;
+  }
   const onSubmit = (ev) => {
     ev.preventDefault();
+    const name = nameRef.current.value;
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const password_confirmation = passwordConfirmationRef.current.value;
+    const error = validateUserCredentials(
+      email,
+      password,
+      true,
+      password_confirmation
+    );
+    if (error) {
+      setMessage(error);
+      return;
+    }
     const payload = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-      password_confirmation: passwordConfirmationRef.current.value,
+      name,
+      email,
+      password,
+      password_confirmation,
     };
     console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
     api
@@ -32,10 +48,10 @@ function Register() {
         navigate("/");
       })
       .catch((err) => {
+        console.log("User signup error");
         const response = err.response;
         if (response && response.status === 422) {
-          console.log(response.data.errors);
-          setErrors(response.data.errors);
+          setMessage(response.data.message);
         }
       });
   };
@@ -48,7 +64,7 @@ function Register() {
           backgroundImage: "url('/LoginBackground.png')",
         }}
       >
-        <div className="w-full lg:w-1/2 p-6 md:p-10 flex flex-col order-2 lg:order-1 bg-white/ rounded-lg">
+        <div className="w-full lg:w-1/2 md:w-2/3 sm:w-5/6 p-6 md:p-10 flex flex-col order-2 lg:order-1 bg-white/ rounded-lg">
           <Link
             to="/"
             className="flex items-center text-black hover:text-gray-400 transition duration-300 mb-6"
@@ -66,7 +82,12 @@ function Register() {
               Log in
             </Link>
           </p>
-          <form className="space-y-4" onSubmit={onSubmit}>
+          {message && (
+            <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm font-medium border border-red-400 mb-4">
+              {message}
+            </div>
+          )}
+          <form className="space-y-4" onSubmit={onSubmit} noValidate>
             <div>
               <label
                 htmlFor="name"

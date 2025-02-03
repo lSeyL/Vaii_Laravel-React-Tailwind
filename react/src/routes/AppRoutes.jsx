@@ -18,8 +18,12 @@ import UserFavourites from "../pages/User/UserFavourites";
 import UserAccountSettings from "../pages/User/UserAccountSettings";
 import UserLogout from "../pages/User/UserLogout";
 import AdminMain from "../pages/Admin/AdminMain";
+import AdminOrders from "../pages/Admin/AdminOrders";
+import AdminUsers from "../pages/Admin/AdminUsers";
+import AdminProducts from "../pages/Admin/AdminProducts";
 import ProtectedRoute from "../pages/Admin/ProtectedRoute";
 import { useStateContext } from "../providers/userContext";
+import AdminSummary from "../pages/Admin/AdminSummary";
 
 function AppRoutes() {
   const { user } = useStateContext();
@@ -39,9 +43,9 @@ function AppRoutes() {
           path: "/profile",
           element: <UserProfile />,
           children: [
+            { path: "", element: <UserAccountSettings /> },
             { path: "my-orders", element: <UserOrders /> },
             { path: "my-favourites", element: <UserFavourites /> },
-            { path: "account-settings", element: <UserAccountSettings /> },
             { path: "logout", element: <UserLogout /> },
           ],
         },
@@ -53,15 +57,18 @@ function AppRoutes() {
     { path: "*", element: <NotFound /> },
     {
       path: "/admin",
-      element:
-        user?.role === "admin" ? (
-          <ProtectedRoute requiredRole="admin" />
-        ) : (
-          <NotFound />
-        ),
+      element: <ProtectedRoute requiredRole="admin" />,
       children: [
-        { path: "", element: <AdminMain /> },
-        { path: "product-form", element: <UserOrders /> },
+        {
+          path: "",
+          element: <AdminMain />,
+          children: [
+            { path: "", element: <AdminSummary /> },
+            { path: "orders", element: <AdminOrders /> },
+            { path: "users", element: <AdminUsers /> },
+            { path: "products", element: <AdminProducts /> },
+          ],
+        },
       ],
     },
   ]);

@@ -15,15 +15,10 @@ class CreateUserShopItemTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('shop_item_id');
             $table->timestamps();
-
-            // Composite Primary Key
             $table->primary(['user_id', 'shop_item_id']);
-
-            // Foreign Key Constraints
             $table->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade');
-
             $table->foreign('shop_item_id')
                   ->references('id')->on('shop_items')
                   ->onDelete('cascade');
