@@ -25,7 +25,7 @@ function Products() {
             : { page: currentPage },
         });
 
-        //console.log("✅ Server Response:", response.data);
+        console.log("✅ Server Response:", response.data);
         setProducts(response.data.data);
         setCurrentPage(response.data.meta.current_page);
         setLastPage(response.data.meta.last_page);

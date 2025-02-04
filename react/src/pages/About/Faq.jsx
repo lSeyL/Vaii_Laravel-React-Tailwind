@@ -40,16 +40,14 @@ function Faq() {
   ];
 
   return (
-    <div className="flex flex-col items-center my-8 px-4 mb-20">
-      {/* Title */}
+    <div className="flex flex-col items-center my-8 px-4 md:mb-[130px]">
       <h1 className="text-4xl font-bold mb-6 text-gray-800">FAQs</h1>
       <p className="text-lg text-gray-600 text-center max-w-2xl mb-8">
         Got questions? We’ve got answers! Here are some of the most frequently
         asked questions about our products and services.
       </p>
 
-      {/* FAQ Items */}
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-3xl lg:px-0 px-10">
         {faqData.map((faq, index) => {
           const isOpen = openQuestion === index;
           return (

@@ -18,6 +18,7 @@ class ShopItemResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
             'price' => number_format($this->price, 2, '.', ''),
             'category' => new CategoryResource($this->whenLoaded('category')),

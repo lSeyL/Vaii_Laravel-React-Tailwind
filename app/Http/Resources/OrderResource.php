@@ -17,13 +17,21 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+            ],
             'total_amount' => $this->total_amount,
             'status' => $this->status,
-            'shop_items' => ShopItemResource::collection($this->whenLoaded('shopItems')),
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
-            'shop_items_count' => $this->shopItems()->count(),
+            'created_at' => $this->created_at->format('d.m.Y H:i'),
+            'items_count' => $this->shopItems->count(),
+            'items' => $this->shopItems->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'price' => $item->price,
+                ];
+            }),
         ];
     }
 }

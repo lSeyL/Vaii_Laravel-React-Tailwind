@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopItem;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopItemResource;
 use Illuminate\Support\Facades\Storage;
@@ -54,40 +55,72 @@ class ShopItemController extends Controller
     {
         \Log::info("🛒 Creating new shop item", ['data' => $request->all()]);
     
-        // ✅ Validate request (allow file_path & image_file_path)
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:shop_items,name',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'file_path' => 'required|string', // ✅ File path is required
-            'image_file_path' => 'nullable|string', // ✅ Image file path is optional
+            'file' => [
+                        'required',
+                        'file',
+                        function ($attribute, $value, $fail) {
+                            $allowedExtensions = ['obj', 'fbx', 'glb', 'gltf'];
+                            $extension = strtolower($value->getClientOriginalExtension()); 
+
+                            if (!in_array($extension, $allowedExtensions)) {
+                                $fail("The $attribute must be a file of type: " . implode(", ", $allowedExtensions));
+                            }
+                        },
+                        'max:20480',
+                    ],
+            'image' => 'required|file|mimes:jpg,png,jpeg,gif,webp|max:2048',
             'file_type_ids' => 'required|array',
             'file_type_ids.*' => 'exists:file_types,id',
         ]);
-    
+        \Log::info("Uploaded file type: " . $request->file('file')->getMimeType());
+        \Log::info("Uploaded file extension: " . $request->file('file')->getClientOriginalExtension());
         if ($validator->fails()) {
             \Log::error("❌ Validation Failed:", $validator->errors()->toArray());
             return response()->json([
                 'message' => 'Validation errors',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
+
+
+        $category = Category::find($request->category_id);
+        $categoryName = strtolower(str_replace(" ", "-", $category->name));
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $originalExtension = $request->file('file')->getClientOriginalExtension(); 
+            $originalFilename = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
+
+            
+            $filePath = $request->file('file')->storeAs("files/{$categoryName}", "{$originalFilename}.{$originalExtension}", 'public');
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store("images/{$categoryName}", 'public');
+        }
     
-        // ✅ Store product with file path and image file path
+        
         $shopItem = ShopItem::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category_id' => $request->category_id,
-            'file_path' => $request->file_path,
-            'image_file_path' => $request->image_file_path ?? null, // ✅ Image file path is optional
+            'file_path' => $filePath,
+            'image_file_path' => $imagePath,
+
         ]);
     
-        // ✅ Attach file types
+       
         $shopItem->fileTypes()->sync($request->file_type_ids);
     
-        // ✅ Load relationships
+        
         $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
     
         \Log::info("✅ Shop item created successfully", ['id' => $shopItem->id]);
@@ -114,21 +147,18 @@ class ShopItemController extends Controller
     }
 
     public function showByCategoryAndSlug(string $category, string $slug)
-{
-    $shopItem = ShopItem::with('category')
-        ->withCount('purchasedByUsers')
-        ->whereHas('category', function ($query) use ($category) {
+    {
+        $product = ShopItem::whereHas('category', function ($query) use ($category) {
             $query->where('name', $category);
-        })
-        ->where('slug', $slug)
-        ->first();
+        })->where('slug', $slug)->first();
 
-    if (!$shopItem) {
-        return response()->json(['message' => 'Shop item not found'], 404);
+        if (!$product) {
+            return response()->json(['message' => 'Shop item not found'], 404);
+        }
+
+        return new ShopItemResource($product);
     }
 
-    return new ShopItemResource($shopItem);
-}
 
     /**
      * Update the specified resource in storage.

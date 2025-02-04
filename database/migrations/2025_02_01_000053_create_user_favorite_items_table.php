@@ -4,22 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrdersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('user_favorite_items', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
-            $table->decimal('total_amount', 10, 2);
-            $table->string('status')->default('pending');
+            $table->unsignedBigInteger('shop_item_id');
             $table->timestamps();
-
+            $table->primary(['user_id', 'shop_item_id']);
             $table->foreign('user_id')
                   ->references('id')->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('shop_item_id')
+                  ->references('id')->on('shop_items')
                   ->onDelete('cascade');
         });
     }
@@ -29,6 +30,6 @@ class CreateOrdersTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('user_favorite_items');
     }
 };

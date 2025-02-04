@@ -11,7 +11,7 @@ const AdminMain = () => {
           <NavLink
             to="/admin"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-md transition ${
+              `px-4 py-2 rounded-full transition-all duration-300 ${
                 isActive
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-200"
@@ -23,7 +23,7 @@ const AdminMain = () => {
           <NavLink
             to="/admin/users"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-md transition ${
+              `px-4 py-2 rounded-full transition-all duration-300 ${
                 isActive
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-200"
@@ -35,7 +35,7 @@ const AdminMain = () => {
           <NavLink
             to="/admin/orders"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-md transition ${
+              `px-4 py-2 rounded-full transition-all duration-300 ${
                 isActive
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-200"
@@ -47,7 +47,7 @@ const AdminMain = () => {
           <NavLink
             to="/admin/products"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-md transition ${
+              `px-4 py-2 rounded-full transition-all duration-300 ${
                 isActive
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-200"
@@ -55,6 +55,18 @@ const AdminMain = () => {
             }
           >
             Products
+          </NavLink>
+          <NavLink
+            to="/admin/add-product"
+            className={({ isActive }) =>
+              `px-4 py-2 rounded-full transition-all duration-300 ${
+                isActive
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-700 hover:bg-gray-200"
+              }`
+            }
+          >
+            Add product
           </NavLink>
         </nav>
         <button

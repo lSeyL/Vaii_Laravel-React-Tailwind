@@ -24,6 +24,7 @@ import AdminProducts from "../pages/Admin/AdminProducts";
 import ProtectedRoute from "../pages/Admin/ProtectedRoute";
 import { useStateContext } from "../providers/userContext";
 import AdminSummary from "../pages/Admin/AdminSummary";
+import AdminAddProductForm from "../pages/Admin/AdminAddProductForm";
 
 function AppRoutes() {
   const { user } = useStateContext();
@@ -67,6 +68,7 @@ function AppRoutes() {
             { path: "orders", element: <AdminOrders /> },
             { path: "users", element: <AdminUsers /> },
             { path: "products", element: <AdminProducts /> },
+            { path: "add-product", element: <AdminAddProductForm /> },
           ],
         },
       ],

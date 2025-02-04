@@ -26,6 +26,12 @@ class OrderShopItemTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'order_id' => 2,
+                'shop_item_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
             
         ]);
     }

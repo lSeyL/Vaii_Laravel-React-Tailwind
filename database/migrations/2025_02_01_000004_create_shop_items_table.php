@@ -12,8 +12,9 @@ class CreateShopItemsTable extends Migration
     public function up(): void
     {
         Schema::create('shop_items', function (Blueprint $table) {
-            $table->bigIncrements('id'); // BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY
+            $table->bigIncrements('id');
             $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');

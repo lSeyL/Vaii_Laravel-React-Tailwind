@@ -113,5 +113,10 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted successfully']);
     }
 
+    public function getUser(Request $request)
+    {
+        return new UserResource($request->user());
+    }
+
 
 }
