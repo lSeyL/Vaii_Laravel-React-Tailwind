@@ -33,7 +33,7 @@ function AdminProduct({ product, setProducts }) {
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow">
+    <div className="border p-4 rounded-lg shadow bg-white w-full box-border">
       <h2 className="text-lg font-semibold">{product.name}</h2>
       <p className="text-gray-600">{product.price} €</p>
       <div className="mt-2 space-x-2">

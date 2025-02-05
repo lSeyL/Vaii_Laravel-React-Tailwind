@@ -1,30 +1,7 @@
-import { useEffect, useState } from "react";
-import api from "../../services/api";
-
+import { HiOutlineArrowDownOnSquare } from "react-icons/hi2";
+import useOrders from "./hooks/useOrders";
 function UserOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await api.get("/my-orders");
-        const orderData = Array.isArray(response.data.data)
-          ? response.data.data
-          : [];
-        setOrders(orderData);
-        console.log("api response:", response.data);
-      } catch (err) {
-        console.error("❌ Error fetching orders:", err);
-        setError("Failed to fetch orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, []);
+  const { orders, loading, error } = useOrders();
 
   const handleDownload = (fileUrl) => {
     if (!fileUrl) {
@@ -38,31 +15,51 @@ function UserOrders() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="p-6">
+    <div className="p-2 sm:p-3 md:p-6 text-center">
       <h2 className="text-2xl font-bold mb-4">My Orders</h2>
       {orders?.length === 0 ? (
         <p>You have no orders yet.</p>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 flex flex-col items-center text-left">
           {orders?.map((order) => (
-            <div key={order?.id} className="border p-4 rounded-lg shadow-md">
-              <p className="font-semibold">{order?.name}</p>
-              <p>Category: {order?.category.name}</p>
-              <p>Price: {order?.price} €</p>
-              <p>
-                Purchased on: {new Date(order?.created_at).toLocaleDateString()}
-              </p>
-              {order?.file_url ? (
-                <button
-                  onClick={() => handleDownload(order?.file_url, order.name)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-                >
-                  Download
-                </button>
-              ) : (
-                <p className="text-red-500">File not available</p>
-              )}
-              <p>{/* order.file_url */}</p>
+            <div
+              key={order?.id}
+              className="border p-4 rounded-lg shadow-md flex items-center justify-between w-full lg:w-2/3 "
+            >
+              <div>
+                <p className="font-semibold">{order?.name}</p>
+                <p>Category: {order?.category.name}</p>
+                <p>Price: {order?.price} €</p>
+                <p>
+                  Purchased on:{" "}
+                  {order?.created_at
+                    ? new Date(order?.created_at).toLocaleDateString()
+                    : "N/A"}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                {order?.image_file_path && (
+                  <img
+                    src={order.image_file_path}
+                    alt={order.name}
+                    className="w-20 h-20 object-cover rounded-lg"
+                  />
+                )}
+
+                <div className="flex flex-col items-center gap-2">
+                  {order?.file_url ? (
+                    <button
+                      onClick={() => handleDownload(order.file_url, order.name)}
+                      className="icon-button"
+                    >
+                      <HiOutlineArrowDownOnSquare size={26} />
+                    </button>
+                  ) : (
+                    <p className="text-red-500 text-sm">File not available</p>
+                  )}
+                </div>
+              </div>
             </div>
           ))}
         </div>

@@ -3,7 +3,7 @@ function CartItem({ item, onDelete }) {
         <li className="flex justify-between items-center py-2 pt-4">
             <div className="flex items-center">
                 <img
-                    src={item.image_file_path} // Use the image_file_path from the item object
+                    src={item.image_file_path}
                     alt={item.name}
                     className="h-24 w-24 bg-gray-200 rounded-md flex-shrink-0 mr-4 object-cover"
                 />

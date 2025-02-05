@@ -26,8 +26,9 @@ Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/shop-items/search', [ShopItemController::class, 'search']);
 Route::get('/shop-items/{category}/{slug}', [ShopItemController::class, 'showByCategoryAndSlug']);
-Route::apiResource('shop-items', ShopItemController::class); 
-
+Route::get('/shop-items', [ShopItemController::class, 'index']);
+Route::get('/categories', [CategoryController::class, 'getCategories']);
+Route::get('/file-types', [FileTypeController::class, 'getFileTypes']);
 
 //Pre logged userov
 Route::middleware('auth:sanctum')->group(function () {
@@ -59,14 +60,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
         //Route::apiResource('users', UserController::class); 
         //Produkty
+        Route::get('/shop-items/all', [ShopItemController::class, 'index']);
         Route::post('/shop-items', [ShopItemController::class, 'store']);
         Route::post('/shop-items/{id}', [ShopItemController::class, 'update']);
         Route::delete('/shop-items/{id}', [ShopItemController::class, 'destroy']);
-        Route::get('/categories', [CategoryController::class, 'getCategories']);
-        Route::get('/file-types', [FileTypeController::class, 'getFileTypes']);
         
         //Ordery
-        Route::get('/admin/orders', [OrderController::class, 'getAllOrders'])->middleware('admin');
+        Route::get('/admin/orders', [OrderController::class, 'getAllOrders']);
 
     });
 });

@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
+//const navigate = useNavigate();
 const axiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
 });
@@ -21,6 +22,7 @@ axiosClient.interceptors.response.use(
       // window.location.reload();
     } else if (response.status === 404) {
       //Show not found
+      //navigate("/notfound");
     }
 
     throw error;

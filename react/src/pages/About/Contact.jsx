@@ -9,7 +9,7 @@ function Contact() {
           backgroundPosition: "center",
         }}
       >
-        <div className="bg-blue-50/0 p-10 md:p-12 flex-1">
+        <div className="bg-blue-50/0 p-2 md:p-12 flex-1">
           <h1 className="text-4xl font-bold text-gray-800 mb-6">Contact Us</h1>
           <p className="text-gray-600 mb-6 text-lg leading-relaxed">
             Email or complete the form to reach out to us. We’re here to help
@@ -31,7 +31,7 @@ function Contact() {
           </a>
         </div>
 
-        <div className="p-10 md:p-12 flex-1">
+        <div className="p-2 md:p-12 flex-1">
           <h2 className="text-3xl font-bold text-gray-800 mb-5 ml-3">
             Get in Touch
           </h2>
@@ -40,26 +40,26 @@ function Contact() {
               <input
                 type="text"
                 placeholder="First name"
-                className="w-1/2 border border-gray-300 rounded-full p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-1/2 border contact-forms"
               />
               <input
                 type="text"
                 placeholder="Last name"
-                className="w-1/2 border border-gray-300 rounded-full p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-1/2 border contact-forms"
               />
             </div>
             <div>
               <input
                 type="email"
                 placeholder="Your email"
-                className="w-full border border-gray-300 rounded-full p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-full border contact-forms"
               />
             </div>
             <div>
               <textarea
                 placeholder="Your message"
                 rows="6"
-                className="w-full border border-gray-300 rounded-lg p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-full rounded-xl border contact-forms"
               ></textarea>
             </div>
             <div>

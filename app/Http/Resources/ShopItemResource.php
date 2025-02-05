@@ -21,6 +21,7 @@ class ShopItemResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
+            'long_description' => $this->long_description,
             'price' => number_format($this->price, 2, '.', ''),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'file_types' => FileTypeResource::collection($this->whenLoaded('fileTypes')),
@@ -30,6 +31,7 @@ class ShopItemResource extends JsonResource
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'purchased_by_users_count' => $this->purchased_by_users_count, 
+            
         ];
     }
 }

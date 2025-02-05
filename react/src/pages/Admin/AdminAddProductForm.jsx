@@ -6,6 +6,7 @@ function AdminAddProductForm() {
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
+    description: "",
     category_id: "",
     file_type_ids: [],
     image: null,
@@ -72,6 +73,7 @@ function AdminAddProductForm() {
       const formData = new FormData();
       formData.append("name", newProduct.name);
       formData.append("price", newProduct.price);
+      formData.append("description", newProduct.description);
       formData.append("category_id", newProduct.category_id);
       formData.append("image", newProduct.image);
       formData.append("file", newProduct.modelFile);
@@ -130,6 +132,15 @@ function AdminAddProductForm() {
             className="border p-2 w-full rounded-md"
           />
         </div>
+        <input
+          type="text"
+          placeholder="Description"
+          value={newProduct.description}
+          onChange={(e) =>
+            setNewProduct({ ...newProduct, description: e.target.value })
+          }
+          className="border p-2 w-full rounded-md mt-5"
+        />
 
         <div className="mt-4">
           <label className="block font-medium">Category</label>
@@ -223,7 +234,7 @@ function AdminAddProductForm() {
 
         <button
           onClick={handleAddProduct}
-          className="mt-6 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
+          className="mt-6 w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition"
         >
           Add Product
         </button>

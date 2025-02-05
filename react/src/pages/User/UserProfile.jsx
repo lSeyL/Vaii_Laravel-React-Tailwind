@@ -32,28 +32,16 @@ function UserProfile() {
           My Profile
         </h2>
         <nav className="space-y-4">
-          <Link
-            to=""
-            className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-center md:text-left"
-          >
+          <Link to="" className="user-button">
             Account Settings
           </Link>
-          <Link
-            to="my-orders"
-            className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-center md:text-left"
-          >
+          <Link to="my-orders" className="user-button">
             My Orders
           </Link>
-          <Link
-            to="my-favourites"
-            className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-center md:text-left"
-          >
+          <Link to="my-favourites" className="user-button">
             My Favorites
           </Link>
-          <button
-            onClick={handleLogout}
-            className="block py-2 px-4 rounded-lg hover:bg-gray-200 transition text-red-500 text-center md:text-left"
-          >
+          <button onClick={handleLogout} className="user-button text-red-500">
             Logout
           </button>
         </nav>

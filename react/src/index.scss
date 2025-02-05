@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --font-roboto: "Roboto", sans-serif;
+    --color-primary: #007bff;
+    --color-secondary: #0056b3;
+    --color-accent: #74c0fc;
+    --color-neutral-light: #f8f9fa;
+    --color-neutral: #f4f4f4;
+    --color-neutral-dark: #343a40;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    @apply font-roboto;
+}
+
+@layer components {
+    .loader {
+        width: 45px;
+        aspect-ratio: 0.75;
+        --c: no-repeat linear-gradient(theme(colors.stone.800) 0 0);
+        background: var(--c) 0% 50%, var(--c) 50% 50%, var(--c) 100% 50%;
+        background-size: 20% 50%;
+        animation: loading 1s infinite linear;
+    }
+
+    .icon-button {
+        padding: 8px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: #292524;
+        color: #292524;
+        border-radius: 9999px;
+        transition: all 300ms ease-in-out;
+
+        &:hover {
+            background-color: #57534e;
+            color: white;
+        }
+    }
+
+    .user-button {
+        display: block;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        text-align: center;
+        transition: background-color 300ms ease-in-out;
+        background-color: transparent;
+        &:hover {
+            background-color: #f3f4f6;
+        }
+        @media (min-width: 768px) {
+            text-align: left;
+        }
+    }
+
+    .footer-link {
+        color: inherit;
+        transition: all 300ms ease-in-out;
+
+        &:hover {
+            color: #9ca3af;
+        }
+    }
+
+    .contact-forms {
+        border: 1px solid #d1d5db;
+        border-radius: 9999px;
+        padding: 16px;
+        font-size: 1.125rem;
+        outline: none;
+        transition: box-shadow 200ms ease-in-out;
+
+        &:focus {
+            box-shadow: 0 0 0 4px #292524;
+        }
+    }
+
+    .loader-back {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(226, 232, 240, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    .nav-item {
+        padding: 8px 4px;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        transition: all 300ms ease-in-out;
+        color: #374151;
+
+        &:hover {
+            color: #57534e;
+        }
+
+        &.active {
+            color: #292524;
+            background-color: white;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 9999px;
+        }
+
+        &.phone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    }
+}
+
+@keyframes loading {
+    20% {
+        background-position: 0% 0%, 50% 50%, 100% 50%;
+    }
+    40% {
+        background-position: 0% 100%, 50% 0%, 100% 50%;
+    }
+    60% {
+        background-position: 0% 50%, 50% 100%, 100% 0%;
+    }
+    80% {
+        background-position: 0% 50%, 50% 50%, 100% 100%;
+    }
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0.5;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@layer utilities {
+    .animate-fadeInUp {
+        animation: fadeInUp 1s ease-out forwards;
+    }
+}

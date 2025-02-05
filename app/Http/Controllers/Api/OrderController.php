@@ -10,9 +10,12 @@ use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
-    public function getAllOrders()
+    public function getAllOrders(Request $request)
     {
-        $orders = Order::with(['user', 'shopItems'])->orderBy('created_at', 'desc')->get();
+        $perPage = $request->input('per_page', 10); 
+        $orders = Order::with(['user', 'shopItems'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage); 
         return OrderResource::collection($orders);
     }
 }

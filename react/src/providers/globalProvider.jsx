@@ -2,13 +2,6 @@ import React, { createContext, useContext, useState } from "react";
 
 const GlobalContext = createContext();
 
-const generateSlug = (text) =>
-  text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .trim();
-
 export const GlobalProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const addToCart = (item) => {

@@ -3,7 +3,6 @@ import api from "../../services/api";
 import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi";
-import { HiArrowSmallLeft } from "react-icons/hi2";
 import { useStateContext } from "../../providers/userContext";
 import { validateUserCredentials } from "../../utils/validation";
 function Login() {

@@ -10,7 +10,7 @@ class ShopItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','slug', 'description',
+    protected $fillable = ['name','slug', 'description','long_description',
      'price', 'category_id','image_file_path', 'file_path'];
 
      protected static function boot()

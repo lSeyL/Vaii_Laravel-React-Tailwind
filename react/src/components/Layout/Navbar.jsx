@@ -72,7 +72,7 @@ function Navbar() {
       </div>
 
       <nav
-        className={`bg-neutral space-x-4 hidden py-2 px-2 rounded-full ${
+        className={`bg-neutral space-x-4 hidden py-2 px-2 ml-10 rounded-full ${
           isSearching ? "md:hidden lg:hidden xl:flex" : "md:flex"
         }`}
       >
@@ -103,7 +103,11 @@ function Navbar() {
         <NavItem to="/cart">
           <HiOutlineShoppingCart size={32} />
           {cartCount > 0 && (
-            <span className="absolute top-11 right-[70px] bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            <span
+              className={`absolute top-11 ${
+                user?.role === "admin" ? "right-[140px]" : "right-[70px]"
+              } bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center`}
+            >
               {cartCount}
             </span>
           )}
@@ -228,6 +232,11 @@ function Navbar() {
           <NavItem to="/cart" onClick={toggleMenu} phone={true}>
             <HiOutlineShoppingCart size={34} />
             <span>Cart</span>
+            {cartCount > 0 && (
+              <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </NavItem>
           {token && user ? (
             <>

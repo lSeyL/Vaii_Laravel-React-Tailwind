@@ -15,9 +15,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['purchasedShopItems', 'orders'])->paginate(10);
+        $perPage = $request->input('per_page', 10);
+        $users = User::with(['purchasedShopItems', 'orders'])->paginate($perPage);
         return UserResource::collection($users);
     }
 

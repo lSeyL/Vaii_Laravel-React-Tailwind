@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import AppRoutes from "./routes/AppRoutes";
-import "./index.css";
+import "./index.scss";
 import { GlobalProvider } from "./providers/globalProvider";
 import { ContextProvider } from "./providers/userContext";
 import { ToastContainer } from "react-toastify";

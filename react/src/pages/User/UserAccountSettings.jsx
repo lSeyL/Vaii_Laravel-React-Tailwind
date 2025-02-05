@@ -173,8 +173,7 @@ function UserAccountSettings() {
           <div className="bg-white mx-5 md:mx-0 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-lg font-bold">Confirm Account Deletion</h2>
             <p className="mt-2">
-              Are you sure you want to delete your account? This action cannot
-              be undone.
+              Are you sure you want to delete your account?
             </p>
             <div className="flex justify-center mt-4 space-x-4">
               <button

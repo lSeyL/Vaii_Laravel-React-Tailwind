@@ -16,6 +16,7 @@ class CreateShopItemsTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->text('long_description')->nullable();
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');
             $table->string('file_path');

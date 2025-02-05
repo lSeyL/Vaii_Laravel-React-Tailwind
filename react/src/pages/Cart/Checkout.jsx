@@ -8,9 +8,10 @@ import api from "../../services/api";
 function Checkout() {
   const { cart, clearCart } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
-  const { token } = useStateContext();
+  const { token, user } = useStateContext();
   const navigate = useNavigate();
-  if (cart.length === 0) {
+
+  if (cart.length === 0 || !user || !token) {
     return <Navigate to="/cart" replace />;
   }
 
@@ -50,11 +51,11 @@ function Checkout() {
       {isLoading && <Loader />}
       <div className="bg-white shadow-lg rounded-2xl w-full max-w-3xl p-10">
         <Link
-          to="/"
+          to="/cart"
           className="flex items-center text-black hover:text-gray-400 transition duration-300 mb-6"
         >
           <HiArrowLeft className="w-7 h-7 mr-2 ml-3" />
-          <span className="text-lg">Home</span>
+          <span className="text-lg">Back to cart</span>
         </Link>
         <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
           Checkout
