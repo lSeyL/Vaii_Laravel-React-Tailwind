@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../services/api"; // API instance
+import api from "../../services/api";
 import AdminUser from "./AdminComponents/AdminUser";
 
 function AdminUsers() {
@@ -13,10 +13,10 @@ function AdminUsers() {
         if (Array.isArray(response.data)) {
           setUsers(response.data);
         } else if (response.data.data && Array.isArray(response.data.data)) {
-          setUsers(response.data.data); // ✅ Handle paginated response
+          setUsers(response.data.data);
         } else {
           console.error("❌ Unexpected response format:", response.data);
-          setUsers([]); // Prevent crash
+          setUsers([]);
         }
       } catch (error) {
         console.error("❌ Error fetching users:", error);
@@ -26,13 +26,20 @@ function AdminUsers() {
   }, []);
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {users.map((user) => (
-          <AdminUser key={user.id} user={user} setUsers={setUsers} />
-        ))}
-      </div>
+    <div className="w-full h-full p-6 bg-white rounded-xl shadow-lg">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Manage Users
+      </h2>
+
+      {users.length === 0 ? (
+        <p className="text-center text-gray-500">No users found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {users.map((user) => (
+            <AdminUser key={user.id} user={user} setUsers={setUsers} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

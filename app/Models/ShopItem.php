@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -34,9 +35,14 @@ class ShopItem extends Model
     }
 
     public function fileTypes()
-{
+    {
     return $this->belongsToMany(FileType::class, 'shop_item_file_types');
-}
+    }
+    
+    public function additionalImages(): HasMany
+    {
+        return $this->hasMany(ShopItemImage::class);
+    }
 
     public function orders()
     {

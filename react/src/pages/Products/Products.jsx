@@ -3,14 +3,16 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Loader from "../../components/UI/Loader";
 import ProductItem from "./ProductItem";
 import api from "../../services/api";
-import { useSearchParams } from "react-router-dom";
-
+import { useNavigate, useSearchParams } from "react-router-dom";
+import CategoryFilter from "./CategoryFilter";
 function Products() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -18,11 +20,15 @@ function Products() {
       try {
         const queryParams = new URLSearchParams(searchParams);
         const searchQuery = queryParams.get("name") || "";
+        const category = queryParams.get("category") || "";
+
+        console.log("🔍 Fetching with params:", {
+          name: searchQuery,
+          category,
+        });
 
         const response = await api.get(`/shop-items/search`, {
-          params: searchQuery
-            ? { page: currentPage, name: searchQuery }
-            : { page: currentPage },
+          params: { page: currentPage, name: searchQuery, category },
         });
 
         console.log("✅ Server Response:", response.data);
@@ -39,8 +45,35 @@ function Products() {
     fetchProducts();
   }, [currentPage, searchParams]);
 
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await api.get("/categories");
+        setCategories(response.data.data);
+        console.log("✅ Categorieess:", response.data);
+      } catch (error) {
+        console.error("❌ Error fetching categories:", error);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = (category) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (category) {
+      newParams.set("category", category);
+    } else {
+      newParams.delete("category");
+    }
+    setSearchParams(newParams);
+    navigate(`/products?${newParams.toString()}`);
+  };
+
   return (
-    <div className="flex flex-col items-center my-4 mx-auto max-w-screen-xl px-4">
+    <div className="mt-32flex flex-col items-center my-4 mx-auto max-w-screen-xl px-4">
+      <CategoryFilter />
+
       {isLoading ? (
         <Loader />
       ) : products.length === 0 ? (

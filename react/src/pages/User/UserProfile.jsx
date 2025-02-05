@@ -9,6 +9,9 @@ function UserProfile() {
   if (!token) {
     return <Navigate to="/login" replace />;
   }
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
   const handleLogout = async () => {
     try {
       await api.post("/logout");
@@ -24,8 +27,8 @@ function UserProfile() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
-      <aside className="w-full md:w-64 bg-white shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
+      <aside className="hidden md:block w-full md:w-64 bg-white shadow-md p-6">
+        <h2 className=" text-2xl font-bold mb-6 text-center md:text-left">
           My Profile
         </h2>
         <nav className="space-y-4">

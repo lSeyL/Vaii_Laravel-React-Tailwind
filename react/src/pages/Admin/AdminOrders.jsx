@@ -31,7 +31,6 @@ function AdminOrders() {
               </p>
               <p>Items: {order.items_count}</p>
 
-              {/* ✅ Dropdown for showing items */}
               <details className="mt-2">
                 <summary className="cursor-pointer text-blue-600">
                   View Items

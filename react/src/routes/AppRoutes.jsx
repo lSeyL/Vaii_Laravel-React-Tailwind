@@ -16,7 +16,6 @@ import UserProfile from "../pages/User/UserProfile";
 import UserOrders from "../pages/User/UserOrders";
 import UserFavourites from "../pages/User/UserFavourites";
 import UserAccountSettings from "../pages/User/UserAccountSettings";
-import UserLogout from "../pages/User/UserLogout";
 import AdminMain from "../pages/Admin/AdminMain";
 import AdminOrders from "../pages/Admin/AdminOrders";
 import AdminUsers from "../pages/Admin/AdminUsers";
@@ -25,6 +24,7 @@ import ProtectedRoute from "../pages/Admin/ProtectedRoute";
 import { useStateContext } from "../providers/userContext";
 import AdminSummary from "../pages/Admin/AdminSummary";
 import AdminAddProductForm from "../pages/Admin/AdminAddProductForm";
+import AdminEditProductForm from "../pages/Admin/AdminEditProductForm";
 
 function AppRoutes() {
   const { user } = useStateContext();
@@ -47,7 +47,6 @@ function AppRoutes() {
             { path: "", element: <UserAccountSettings /> },
             { path: "my-orders", element: <UserOrders /> },
             { path: "my-favourites", element: <UserFavourites /> },
-            { path: "logout", element: <UserLogout /> },
           ],
         },
       ],
@@ -69,6 +68,7 @@ function AppRoutes() {
             { path: "users", element: <AdminUsers /> },
             { path: "products", element: <AdminProducts /> },
             { path: "add-product", element: <AdminAddProductForm /> },
+            { path: "edit/:productId", element: <AdminEditProductForm /> },
           ],
         },
       ],

@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { HiPlus } from "react-icons/hi";
 
-function AdminAddProductForm() {
+function AdminEditProductForm() {
+  const { productId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -15,40 +20,55 @@ function AdminAddProductForm() {
 
   const [categories, setCategories] = useState([]);
   const [fileTypes, setFileTypes] = useState([]);
-
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleAdditionalImages = (event) => {
-    const files = Array.from(event.target.files);
-    //console.log("📸 Selected Files:", files);
-
-    if (files.length > 0) {
-      setNewProduct((prevState) => ({
-        ...prevState,
-        additionalImages: [...(prevState.additionalImages || []), ...files],
-      }));
-      const previewUrls = files.map((file) => URL.createObjectURL(file));
-      setSelectedImages((prevImages) => [...prevImages, ...previewUrls]);
-    }
-  };
-  const handleAddImageClick = () => {
-    document.getElementById("additionalImageInput").click();
-  };
-
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       try {
         const categoryResponse = await api.get("/categories");
         const fileTypeResponse = await api.get("/file-types");
 
         setCategories(categoryResponse.data.data);
         setFileTypes(fileTypeResponse.data.data);
+
+        if (productId && !location.state?.product) {
+          const productResponse = await api.get(`/shop-items/${productId}`);
+          const productData = productResponse.data.data;
+          setNewProduct({
+            name: productData.name || "",
+            price: productData.price || "",
+            category_id: productData.category_id || "",
+            file_type_ids: productData.file_type_ids || [],
+            image: null,
+            modelFile: null,
+            additionalImages: productData.additionalImages || [],
+          });
+          setSelectedImages(
+            productData.additionalImages.map((img) => img.image_url)
+          );
+        } else if (location.state?.product) {
+          setNewProduct({
+            name: location.state.product.name || "",
+            price: location.state.product.price || "",
+            category_id: location.state.product.category_id || "",
+            file_type_ids: location.state.product.file_type_ids || [],
+            image: null,
+            modelFile: null,
+            additionalImages: location.state.product.additionalImages || [],
+          });
+          setSelectedImages(
+            location?.state?.product?.additionalImages?.map(
+              (img) => img.image_url
+            )
+          );
+        }
       } catch (error) {
         console.error("❌ Error fetching data:", error);
       }
-    }
+    };
+
     fetchData();
-  }, []);
+  }, [productId, location.state]);
 
   const handleCheckboxChange = (id) => {
     setNewProduct((prev) => ({
@@ -60,46 +80,69 @@ function AdminAddProductForm() {
   };
 
   const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
     if (type === "image") {
-      setNewProduct({ ...newProduct, image: e.target.files[0] });
+      setNewProduct((prev) => ({ ...prev, image: file }));
     } else if (type === "model") {
-      setNewProduct({ ...newProduct, modelFile: e.target.files[0] });
+      setNewProduct((prev) => ({ ...prev, modelFile: file }));
     }
   };
 
-  const handleAddProduct = async () => {
+  const handleAdditionalImages = (e) => {
+    const files = Array.from(e.target.files);
+    setNewProduct((prev) => ({
+      ...prev,
+      additionalImages: [...prev.additionalImages, ...files],
+    }));
+
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
+    setSelectedImages((prev) => [...prev, ...previewUrls]);
+  };
+
+  const handleAddImageClick = () => {
+    document.getElementById("additionalImageInput").click();
+  };
+
+  const handleSubmit = async () => {
     try {
       const formData = new FormData();
       formData.append("name", newProduct.name);
       formData.append("price", newProduct.price);
       formData.append("category_id", newProduct.category_id);
-      formData.append("image", newProduct.image);
-      formData.append("file", newProduct.modelFile);
+      if (newProduct.image) formData.append("image", newProduct.image);
+      if (newProduct.modelFile) formData.append("file", newProduct.modelFile);
+      const entries = Object.fromEntries(formData.entries());
+      console.log("data", entries);
 
       newProduct.file_type_ids.forEach((id) => {
         formData.append("file_type_ids[]", id);
       });
 
-      if (
-        !newProduct.additionalImages ||
-        newProduct.additionalImages.length === 0
-      ) {
-        console.error("🚨 No additional images selected!");
-      }
-
       newProduct.additionalImages.forEach((file) => {
         formData.append("additional_images[]", file);
-        console.log("☑️Additional file: ", file);
       });
 
-      console.log("☑️ Images:", newProduct.additionalImages);
+      console.log("📤 Sending FormData:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ":", pair[1]);
+      }
 
-      const response = await api.post("/shop-items", formData);
+      if (productId) {
+        await api.post(`/shop-items/${productId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("✅ Product updated successfully");
+      } else {
+        await api.post("/shop-items", formData);
+        console.log("✅ Product created successfully");
+      }
 
-      console.log("✅ Product added successfully:", response.data);
+      navigate("/admin/products");
     } catch (error) {
       console.error(
-        "❌ Error adding product:",
+        "❌ Error saving product:",
         error.response?.data || error.message
       );
     }
@@ -108,7 +151,9 @@ function AdminAddProductForm() {
   return (
     <div className="flex justify-center p-4">
       <div className="w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">Add New Product</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          {productId ? "Edit Product" : "Add New Product"}
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
@@ -168,68 +213,25 @@ function AdminAddProductForm() {
             ))}
           </div>
         </div>
-
-        <div className="mt-4">
-          <label className="block font-medium">Main Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, "image")}
-            className="border p-2 w-full rounded-md"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="block font-medium">3D Model File</label>
-          <input
-            type="file"
-            accept=".obj,.fbx,.glb,.gltf,.zip"
-            onChange={(e) => handleFileChange(e, "model")}
-            className="border p-2 w-full rounded-md"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="block font-medium">Additional Images</label>
-          <div className="flex items-center space-x-4">
-            <input
-              id="additionalImageInput"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleAdditionalImages}
-              className="hidden"
+        {selectedImages?.map((image, index) => (
+          <div key={index} className="relative w-20 h-20">
+            <img
+              src={image}
+              alt={`preview-${index}`}
+              className="w-full h-full object-cover rounded-md border"
             />
-            <button
-              className="p-2 bg-blue-500 text-white rounded-md"
-              onClick={handleAddImageClick}
-            >
-              <HiPlus className="w-6 h-6" />
-            </button>
           </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {selectedImages.map((image, index) => (
-              <div key={index} className="relative w-20 h-20">
-                <img
-                  src={image}
-                  alt={`preview-${index}`}
-                  className="w-full h-full object-cover rounded-md border"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
 
         <button
-          onClick={handleAddProduct}
+          onClick={handleSubmit}
           className="mt-6 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
         >
-          Add Product
+          {productId ? "Update Product" : "Add Product"}
         </button>
       </div>
     </div>
   );
 }
 
-export default AdminAddProductForm;
+export default AdminEditProductForm;

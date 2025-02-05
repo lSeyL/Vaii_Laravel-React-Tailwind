@@ -32,7 +32,7 @@ Route::apiResource('shop-items', ShopItemController::class);
 //Pre logged userov
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/profile-update', [UserController::class, 'update']);
+    Route::post('/profile-update', [UserController::class, 'update']);
     Route::delete('delete-account', [UserController::class, 'userDelete']);
     Route::get('/user', [UserController::class, 'getUser']);
     //Order
@@ -54,12 +54,13 @@ Route::middleware('auth:sanctum')->group(function () {
 //Admin routy
     Route::middleware('admin')->group(function () {
         //Usery
-        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users/{user}', [UserController::class, 'updateUserAsAdmin']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
-        Route::apiResource('users', UserController::class); 
+        //Route::apiResource('users', UserController::class); 
         //Produkty
         Route::post('/shop-items', [ShopItemController::class, 'store']);
-        Route::put('/shop-items/{id}', [ShopItemController::class, 'update']);
+        Route::post('/shop-items/{id}', [ShopItemController::class, 'update']);
         Route::delete('/shop-items/{id}', [ShopItemController::class, 'destroy']);
         Route::get('/categories', [CategoryController::class, 'getCategories']);
         Route::get('/file-types', [FileTypeController::class, 'getFileTypes']);

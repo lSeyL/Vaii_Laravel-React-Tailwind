@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ShopItem;
 use App\Models\Category;
+use App\Models\ShopItemImage;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopItemResource;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class ShopItemController extends Controller
      */
     public function index()
     {
-        $shopItems = ShopItem::with('category','fileTypes')->withCount('purchasedByUsers')->paginate(9);
+        $shopItems = ShopItem::with('category','fileTypes', 'additionalImages')->withCount('purchasedByUsers')->paginate(9);
     
         return ShopItemResource::collection($shopItems);
     }
@@ -77,6 +78,8 @@ class ShopItemController extends Controller
             'image' => 'required|file|mimes:jpg,png,jpeg,gif,webp|max:2048',
             'file_type_ids' => 'required|array',
             'file_type_ids.*' => 'exists:file_types,id',
+            'additional_images' => 'nullable|array',
+            'additional_images.*' => 'file|mimes:jpg,png,jpeg,gif,webp|max:2048',
         ]);
         \Log::info("Uploaded file type: " . $request->file('file')->getMimeType());
         \Log::info("Uploaded file extension: " . $request->file('file')->getClientOriginalExtension());
@@ -97,7 +100,7 @@ class ShopItemController extends Controller
             $originalExtension = $request->file('file')->getClientOriginalExtension(); 
             $originalFilename = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
 
-            
+
             $filePath = $request->file('file')->storeAs("files/{$categoryName}", "{$originalFilename}.{$originalExtension}", 'public');
         }
 
@@ -105,8 +108,6 @@ class ShopItemController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store("images/{$categoryName}", 'public');
         }
-    
-        
         $shopItem = ShopItem::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -116,15 +117,22 @@ class ShopItemController extends Controller
             'image_file_path' => $imagePath,
 
         ]);
-    
-       
+
+        if ($request->hasFile('additional_images')) {
+            foreach ($request->file('additional_images') as $imageFile) {
+                $imagePath = $imageFile->store("images/{$categoryName}/additional", 'public');
+                ShopItemImage::create([
+                    'shop_item_id' => $shopItem->id,
+                    'image_path' => $imagePath,
+                ]);
+            }
+        }
         $shopItem->fileTypes()->sync($request->file_type_ids);
-    
-        
         $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
     
+
+
         \Log::info("✅ Shop item created successfully", ['id' => $shopItem->id]);
-    
         return (new ShopItemResource($shopItem))
             ->additional(['message' => 'Shop item created successfully'])
             ->response()
@@ -150,11 +158,15 @@ class ShopItemController extends Controller
     {
         $product = ShopItem::whereHas('category', function ($query) use ($category) {
             $query->where('name', $category);
-        })->where('slug', $slug)->first();
+        })->where('slug', $slug)
+        ->with('category') 
+        ->first();
 
         if (!$product) {
             return response()->json(['message' => 'Shop item not found'], 404);
         }
+
+        $product->loadMissing('additionalImages');
 
         return new ShopItemResource($product);
     }
@@ -164,74 +176,88 @@ class ShopItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-{
-    $shopItem = ShopItem::find($id);
+    {
+        \Log::info("📥 Raw Request Data:", $request->all());
+        \Log::info("📥 Request Headers:", $request->header());
 
-    if (!$shopItem) {
-        return response()->json(['message' => 'Shop item not found'], 404);
-    }
+        $name = $request->input('name');
+$price = $request->input('price');
+$category_id = $request->input('category_id');
+$file_type_ids = $request->input('file_type_ids', []);
 
-    // ✅ Log incoming request data for debugging
-    \Log::info("🔄 Updating Shop Item ID: " . $shopItem->id, ['data' => $request->all()]);
+\Log::info("📥 Extracted Fields:", compact('name', 'price', 'category_id', 'file_type_ids'));
 
-    // ✅ Validate request
-    $validator = Validator::make($request->all(), [
-        'name' => 'sometimes|required|string|max:255|unique:shop_items,name,' . $id,
-        'description' => 'nullable|string',
-        'price' => 'sometimes|required|numeric|min:0',
-        'category_id' => 'sometimes|required|exists:categories,id',
-        'file' => 'nullable|file|mimes:obj,fbx,glb,glTF',
-        'file_type_ids' => 'sometimes|array',
-        'file_type_ids.*' => 'exists:file_types,id',
-    ]);
 
-    if ($validator->fails()) {
-        \Log::error("❌ Validation Failed:", $validator->errors()->toArray());
-        return response()->json([
-            'message' => 'Validation errors',
-            'errors' => $validator->errors()
-        ], 422);
-    }
+        $shopItem = ShopItem::find($id);
 
-    // ✅ Handle file upload
-    if ($request->hasFile('file')) {
-        if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
-            Storage::disk('public')->delete($shopItem->file_path);
+        if (!$shopItem) {
+            return response()->json(['message' => 'Shop item not found'], 404);
         }
-        $filePath = $request->file('file')->store('shop_items', 'public');
-        $shopItem->file_path = $filePath;
-    }
 
-    // ✅ Only update fields that are sent
-    if ($request->has('name')) {
-        $shopItem->name = $request->name;
-    }
-    if ($request->has('description')) {
-        $shopItem->description = $request->description;
-    }
-    if ($request->has('price')) {
-        $shopItem->price = $request->price;
-    }
-    if ($request->has('category_id')) {
-        $shopItem->category_id = $request->category_id;
-    }
-    if ($request->has('file_type_ids')) {
-        $shopItem->fileTypes()->sync($request->file_type_ids);
-    }
+        // ✅ Log incoming request data for debugging
+        \Log::info("🔄 Updating Shop Item ID: " . $shopItem->id, ['data' => $request->all()]);
 
-    // ✅ Save the updated shop item
-    $shopItem->save();
+        // ✅ Validate request
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255|unique:shop_items,name,' . $id,
+            'description' => 'nullable|string',
+            'price' => 'sometimes|required|numeric|min:0',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'file' => 'nullable|file|mimes:obj,fbx,glb,glTF',
+            'file_type_ids' => 'sometimes|array',
+            'file_type_ids.*' => 'exists:file_types,id',
+        ]);
 
-    // ✅ Load related data and return the full updated item
-    $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
+        if ($validator->fails()) {
+            \Log::error("❌ Validation Failed:", $validator->errors()->toArray());
+            return response()->json([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
-    \Log::info("✅ Shop Item Updated Successfully:", $shopItem->toArray());
+        // ✅ Handle file upload
+        if ($request->hasFile('file')) {
+            if ($shopItem->file_path && Storage::disk('public')->exists($shopItem->file_path)) {
+                Storage::disk('public')->delete($shopItem->file_path);
+            }
+            $filePath = $request->file('file')->store('shop_items', 'public');
+            $shopItem->file_path = $filePath;
+        }
 
-    return (new ShopItemResource($shopItem))
-        ->additional(['message' => 'Shop item updated successfully'])
-        ->response()
-        ->setStatusCode(200);
-}
+        // ✅ Only update fields that are sent
+        if ($request->has('name')) {
+            $shopItem->name = $request->name;
+        }
+        if ($request->has('description')) {
+            $shopItem->description = $request->description;
+        }
+        if ($request->has('price')) {
+            $shopItem->price = $request->price;
+        }
+        if ($request->has('category_id')) {
+            $shopItem->category_id = $request->category_id;
+        }
+        if ($request->has('file_type_ids')) {
+            $shopItem->fileTypes()->sync($request->file_type_ids);
+        }
+        \Log::info("🔄 Before saving:", $shopItem->toArray());
+        // ✅ Save the updated shop item
+        $shopItem->save();
+        \Log::info("✅ After saving:", $shopItem->toArray());
+
+        // ✅ Load related data and return the full updated item
+        $shopItem->load(['category', 'fileTypes'])->loadCount('purchasedByUsers');
+
+        \Log::info("✅ Shop Item Updated Successfully:", $shopItem->toArray());
+
+        $shopItem->refresh();
+\Log::info("🔍 After refresh:", $shopItem->toArray());
+        return (new ShopItemResource($shopItem))
+            ->additional(['message' => 'Shop item updated successfully'])
+            ->response()
+            ->setStatusCode(200);
+    }
 
 
     /**

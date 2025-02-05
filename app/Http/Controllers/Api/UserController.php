@@ -53,6 +53,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $user = auth()->user();
         \Log::info("🔄 Updating User ID: " . $user->id, ['data' => $request->all()]);
         $rules = [];
 
@@ -63,7 +64,10 @@ class UserController extends Controller
             $rules['email'] = 'required|email|max:255|unique:users,email,' . $user->id;
         }
         if ($request->filled('new_password')) {
-            $rules['new_password'] = 'nullable|string|min:6';
+            if (!$request->filled('old_password') || !Hash::check($request->old_password, $user->password)) {
+                return response()->json(['message' => 'Old password is incorrect'], 422);
+            }
+            $rules['new_password'] = 'nullable|string|min:8';
         }
 
         $validated = $request->validate($rules);
@@ -85,16 +89,58 @@ class UserController extends Controller
         return response()->json(['message' => 'User updated successfully', 'user' => new UserResource($user)]);
     }
 
+    public function updateUserAsAdmin(Request $request, $id)
+    {
+        \Log::info("👽 Received ID: " . $id);
+        $admin = auth()->user();
+        if ($admin->role->name !== "admin") {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user->role->name === "admin") {
+            return response()->json(['message' => 'Cannot update admin'], 403);
+        }
+
+        \Log::info("🔄 Admin updating User ID: " . $user->id, ['admin_id' => $admin->id, 'data' => $request->all()]);
+        $rules = [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255|unique:users,email,' . $user->id,
+            'new_password' => 'nullable|string|min:8',
+        ];
+        $validated = $request->validate($rules);
+        $updateData = [];
+        if (isset($validated['name'])) {
+            $updateData['name'] = $validated['name'];
+        }
+        if (isset($validated['email'])) {
+            $updateData['email'] = $validated['email'];
+        }
+        if (isset($validated['new_password'])) {
+            $updateData['password'] = Hash::make($validated['new_password']);
+        }
+        if (!empty($updateData)) {
+            $user->update($updateData);
+        }
+        return response()->json([
+            'message' => 'User updated successfully by Admin',
+            'user' => new UserResource($user),
+        ]);
+    }
+
     public function destroy(User $user)
     {
-        \Log::info("🗑️ Deleting User ID: " . $user->id);
-
+        if ($user->role->name === "admin") {
+            return response()->json(['message' => 'Cannot delete an admin!'], 403);
+        }
         if ($user->id === auth()->id()) {
             return response()->json(['message' => 'You cannot delete yourself'], 403);
         }
-
+        \Log::info("🗑️ Deleting User ID: " . $user->id);
         $user->delete();
-
         return response()->json(['message' => 'User deleted successfully']);
     }
 

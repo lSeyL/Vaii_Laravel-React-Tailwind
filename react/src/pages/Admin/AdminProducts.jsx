@@ -39,12 +39,6 @@ function AdminProducts() {
     fetchProducts();
   }, [currentPage, searchParams, perPage]);
 
-  const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= lastPage) {
-      setCurrentPage(newPage);
-    }
-  };
-
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Products</h1>

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         UserShopItemTableSeeder::class,
         FileTypeSeeder::class,
         ShopItemFileTypeSeeder::class,
+        ShopItemImagesSeeder::class,
     ]);
 
 

@@ -21,7 +21,7 @@ function Contact() {
           </p>
           <p className="text-gray-700 font-medium text-lg">
             <span className="font-bold">Phone: </span>
-            +1 234-567-890
+            +421 562-236-890
           </p>
           <a
             href="#"
@@ -65,7 +65,7 @@ function Contact() {
             <div>
               <button
                 type="submit"
-                className="w-full bg-black text-white py-4 rounded-full hover:bg-blue-600 transition text-lg font-semibold"
+                className="w-full bg-black text-white py-4 rounded-full hover:bg-blue-600 transition duration-300 text-lg font-semibold"
               >
                 Submit
               </button>

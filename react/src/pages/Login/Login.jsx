@@ -75,14 +75,17 @@ function Login() {
           <h1 className="text-3xl font-bold mb-2 text-gray-800 ml-3">
             Welcome Back
           </h1>
-          <p className="text-sm text-gray-600 mb-6 ml-3">
+          <p className="text-m lg:text-sm text-gray-600 mb-6 ml-3">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-blue-500 hover:underline">
+            <Link
+              to="/signup"
+              className="text-blue-500 text-lg lg:text-base hover:text-blue-700 transition-all duration-300"
+            >
               Create a new account
             </Link>
           </p>
           {message && (
-            <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm font-medium border border-red-400 mb-4">
+            <div className="bg-red-50 text-red-600 p-3 rounded-full text-sm font-medium border border-red-400 mb-4">
               {message}
             </div>
           )}
@@ -123,7 +126,7 @@ function Login() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="px-8 py-3 bg-black text-white text-base rounded-full hover:bg-blue-600 transition"
+                className="px-8 py-3 bg-stone-800 text-white text-base rounded-full hover:bg-blue-600 transition-all duration-300"
               >
                 Log In
               </button>

@@ -28,7 +28,12 @@ function UserAccountSettings() {
     setMessage(null);
 
     try {
-      const response = await api.put("/profile-update", {
+      console.log(formData);
+      if (user.role === "admin") {
+        setMessage({ type: "error", text: "Cannot update an admin." });
+        return;
+      }
+      const response = await api.post("/profile-update", {
         name: formData.name,
         email: formData.email,
         old_password: formData.oldPassword || null,
@@ -48,6 +53,10 @@ function UserAccountSettings() {
   const confirmDelete = async () => {
     setDeleting(true);
     try {
+      if (user.role === "admin") {
+        setMessage({ type: "error", text: "Cannot delete an admin." });
+        return;
+      }
       await api.delete("/delete-account");
       console.log("user name " + user?.name);
       setUser(null);
@@ -70,7 +79,7 @@ function UserAccountSettings() {
 
       {message && (
         <div
-          className={`p-3 rounded-md text-white ${
+          className={`p-3 rounded-md mb-5 text-white ${
             message.type === "success" ? "bg-green-500" : "bg-red-500"
           }`}
         >
@@ -80,7 +89,7 @@ function UserAccountSettings() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block pl-3 text-sm font-medium text-gray-700">
             Name
           </label>
           <input
@@ -88,13 +97,13 @@ function UserAccountSettings() {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-black focus:outline-none"
+            className="w-full border border-gray-300 rounded-full p-3 focus:ring-2 focus:ring-black focus:outline-none"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block pl-3 text-sm font-medium text-gray-700">
             Email
           </label>
           <input
@@ -102,18 +111,18 @@ function UserAccountSettings() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-black focus:outline-none"
+            className="w-full border border-gray-300 rounded-full p-3 focus:ring-2 focus:ring-black focus:outline-none"
             required
           />
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold text-gray-600">
+          <h3 className="text-lg pl-3 mb-2 font-semibold text-gray-600">
             Change Password
           </h3>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block pl-3 text-sm font-medium text-gray-700">
               Old Password
             </label>
             <input
@@ -121,13 +130,13 @@ function UserAccountSettings() {
               name="oldPassword"
               value={formData.oldPassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-black focus:outline-none"
+              className="w-full border border-gray-300 rounded-full p-3 focus:ring-2 focus:ring-black focus:outline-none"
               placeholder="Enter old password"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block pl-3 text-sm mt-5 font-medium text-gray-700">
               New Password
             </label>
             <input
@@ -135,7 +144,7 @@ function UserAccountSettings() {
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-black focus:outline-none"
+              className="w-full border border-gray-300 rounded-full p-3 focus:ring-2 focus:ring-black focus:outline-none"
               placeholder="Enter new password"
             />
           </div>
@@ -145,14 +154,14 @@ function UserAccountSettings() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            className="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition"
           >
             Delete Account
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
+            className="px-6 py-3 bg-stone-800 text-white rounded-full hover:bg-stone-700 transition disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>
@@ -161,7 +170,7 @@ function UserAccountSettings() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div className="bg-white mx-5 md:mx-0 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-lg font-bold">Confirm Account Deletion</h2>
             <p className="mt-2">
               Are you sure you want to delete your account? This action cannot
@@ -170,13 +179,13 @@ function UserAccountSettings() {
             <div className="flex justify-center mt-4 space-x-4">
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                className="px-4 py-2 bg-red-600 text-white rounded-full transition-all duration-300 hover:bg-red-700"
               >
                 Yes, Delete
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                className="px-4 py-2 text-white bg-stone-800 rounded-full transition-all duration-300 hover:bg-stone-600"
               >
                 Cancel
               </button>

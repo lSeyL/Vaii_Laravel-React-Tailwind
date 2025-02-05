@@ -75,16 +75,17 @@ function ProductDetails() {
 
         const foundProduct = response.data.data;
         console.log("⭐API? :", foundProduct);
-        console.log("⭐IMAGE? :", foundProduct.image_file_path);
+        //console.log("⭐IMAGE? :", foundProduct.image_file_path);
         if (!foundProduct) {
           throw new Error("Product not found");
         }
+
+        const additionalImages =
+          foundProduct.additional_images?.map((img) => img.image_url) || [];
+
         const galleryImages = [
           foundProduct.image_file_path,
-          "https://via.placeholder.com/150?text=Placeholder+1",
-          "https://via.placeholder.com/150?text=Placeholder+2",
-          "https://via.placeholder.com/150?text=Placeholder+3",
-          ...(foundProduct.galleryImages || []),
+          ...additionalImages,
         ];
 
         setProduct({ ...foundProduct, galleryImages });
@@ -187,33 +188,40 @@ function ProductDetails() {
           <button
             onClick={() => handleBuyNow()}
             disabled={product?.owned}
-            className="bg-black text-white p-3 rounded-full hover:bg-gray-800 transition flex items-center justify-center min-w-[120px]"
+            className="bg-stone-800  text-white p-3 rounded-full hover:bg-stone-600 transition duration-300 flex items-center justify-center min-w-[120px]"
           >
             <span>{product?.owned ? "Product owned" : "Buy Now"}</span>
           </button>
           <button
             onClick={handleAddToCart}
             disabled={product?.owned}
-            className={`border ${
-              isInCart || product?.owned ? "bg-gray-300" : "bg-black"
-            } text-white p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center`}
+            className={`group border ${
+              isInCart || product?.owned
+                ? "bg-gray-300 border-gray-500 hover:border-gray-500"
+                : "bg-stone-800 border-transparent hover:bg-gray-100"
+            } text-white p-3 rounded-full hover:border-black transition-all duration-300 flex items-center justify-center`}
           >
             <HiOutlineShoppingBag
-              className="w-6 h-6"
-              color={isInCart ? "gray" : "white"}
+              className={`w-6 h-6 text-white transition-colors duration-300 
+    group-hover:${product?.owned ? "text-white" : "text-black"}`}
             />
           </button>
 
           {token && (
             <button
               onClick={handleToggleFavorite}
-              className={`border ${
-                product?.isFavorite ? "bg-red-500" : "bg-black"
-              } text-white p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center`}
+              className={`group border ${
+                product?.isFavorite
+                  ? "bg-red-500 border-transparent"
+                  : "bg-black border-transparent"
+              } text-white p-3 rounded-full hover:bg-white hover:border-black transition-all duration-300 flex items-center justify-center`}
             >
               <HiOutlineHeart
-                className="w-6 h-6"
-                color={product?.isFavorite ? "white" : "gray"}
+                className={`w-6 h-6 transition-colors duration-300 ${
+                  product?.isFavorite
+                    ? "text-white group-hover:text-black"
+                    : "text-gray group-hover:text-black"
+                }`}
               />
             </button>
           )}

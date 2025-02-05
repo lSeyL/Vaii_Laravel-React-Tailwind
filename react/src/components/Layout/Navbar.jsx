@@ -4,7 +4,9 @@ import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { HiOutlineUser } from "react-icons/hi2";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { HiXMark } from "react-icons/hi2";
+import { HiOutlineHeart } from "react-icons/hi2";
 import { HiOutlineEnvelope } from "react-icons/hi2";
+import { HiOutlineInboxArrowDown } from "react-icons/hi2";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import { HiOutlineGlobeEuropeAfrica } from "react-icons/hi2";
 import { HiOutlineBookOpen } from "react-icons/hi2";
@@ -13,22 +15,23 @@ import { HiMiniChevronDown } from "react-icons/hi2";
 import { HiMiniChevronUp } from "react-icons/hi2";
 import { HiOutlineStar } from "react-icons/hi2";
 import { HiOutlineRocketLaunch } from "react-icons/hi2";
-import { HiOutlineHeart } from "react-icons/hi2";
 import { HiOutlineKey } from "react-icons/hi2";
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
 import Logo from "../UI/Logo";
 import SearchBar from "../UI/SearchBar";
 import { useStateContext } from "../../providers/userContext";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../providers/globalProvider";
+import api from "../../services/api";
 function Navbar() {
-  const { user } = useStateContext();
+  const { user, setUser, setToken, token } = useStateContext();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isUserOpen, setIsUserOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
   const navigate = useNavigate();
-  const { token } = useStateContext();
   const { cart } = useGlobalContext();
   const cartCount = cart.length;
 
@@ -43,6 +46,22 @@ function Navbar() {
   };
   const toggleCatalogMenu = () => {
     setIsCatalogOpen((prevState) => !prevState);
+  };
+  const toggleUserMenu = () => {
+    setIsUserOpen((prevState) => !prevState);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout");
+      setUser(null);
+      setToken(null);
+      navigate("/");
+      setIsOpen(false);
+      console.log("User logged out.");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -98,7 +117,7 @@ function Navbar() {
             <FiLogIn size={32} />
           </NavItem>
         )}
-        {user?.role === "admin" && (
+        {user?.role === "admin" && token && (
           <NavItem to="/admin">
             <HiOutlineKey size={32} />
           </NavItem>
@@ -208,12 +227,61 @@ function Navbar() {
           </NavItem>
           <NavItem to="/cart" onClick={toggleMenu} phone={true}>
             <HiOutlineShoppingCart size={34} />
-            <span> Cart</span>
+            <span>Cart</span>
           </NavItem>
-          {token ? (
-            <NavItem to="/profile">
-              <HiOutlineUser size={32} />
-            </NavItem>
+          {token && user ? (
+            <>
+              <div className="relative ">
+                <div
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={toggleUserMenu}
+                >
+                  <div className="flex items-center space-x-2">
+                    <NavItem to="/profile" onClick={toggleMenu} phone={true}>
+                      <HiOutlineUser size={34} />
+                      <span>Profile</span>
+                    </NavItem>
+                  </div>
+                  <button className="focus:outline-none text:bg-accent transition-all duration-300 ease-in-out">
+                    {isUserOpen ? (
+                      <HiMiniChevronUp size={26} />
+                    ) : (
+                      <HiMiniChevronDown size={26} />
+                    )}
+                  </button>
+                </div>
+              </div>
+              <div
+                className={`overflow-hidden transform ${
+                  isUserOpen
+                    ? "max-h-40 translate-y-0"
+                    : "max-h-0 -translate-y-2"
+                } transition-all duration-500 ease-in-out`}
+              >
+                <div className="mt-0 ml-8 space-y-2 text-md ">
+                  <NavItem
+                    to="/profile/my-orders"
+                    onClick={toggleMenu}
+                    phone={true}
+                  >
+                    <HiOutlineInboxArrowDown size={22} />
+                    <span>Orders</span>
+                  </NavItem>
+                  <NavItem
+                    to="/profile/my-favourites"
+                    onClick={toggleMenu}
+                    phone={true}
+                  >
+                    <HiOutlineHeart size={22} />
+                    <span>Favourites</span>
+                  </NavItem>
+                  <NavItem onClick={handleLogout} phone={true} to="/logout">
+                    <FiLogOut size={22} />
+                    <span>Logout</span>
+                  </NavItem>
+                </div>
+              </div>
+            </>
           ) : (
             <NavItem to="/login" onClick={toggleMenu} phone={true}>
               <FiLogIn size={34} />
@@ -221,7 +289,7 @@ function Navbar() {
             </NavItem>
           )}
 
-          {user?.role === "admin" && (
+          {user?.role === "admin" && token && (
             <NavItem to="/admin" onClick={toggleMenu} phone={true}>
               <HiOutlineKey size={34} />
               <span>Admin</span>

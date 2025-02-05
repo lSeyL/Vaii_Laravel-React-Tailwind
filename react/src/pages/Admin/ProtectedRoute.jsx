@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../../providers/userContext";
 
 const ProtectedRoute = ({ requiredRole }) => {
-  const { user } = useStateContext();
+  const { user, token } = useStateContext();
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -10,6 +10,9 @@ const ProtectedRoute = ({ requiredRole }) => {
 
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/error" replace />;
+  }
+  if (!token) {
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

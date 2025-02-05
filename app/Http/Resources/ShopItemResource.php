@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\FileTypeResource;
+use App\Http\Resources\ShopItemImageResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,7 @@ class ShopItemResource extends JsonResource
             'file_types' => FileTypeResource::collection($this->whenLoaded('fileTypes')),
             'file_url' => url('storage/' . $this->file_path),
             'image_file_path' => url('storage/' . $this->image_file_path),
+            'additional_images' => ShopItemImageResource::collection($this->whenLoaded('additionalImages')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'purchased_by_users_count' => $this->purchased_by_users_count, 

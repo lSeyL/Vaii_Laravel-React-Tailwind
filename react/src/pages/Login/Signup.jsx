@@ -76,9 +76,12 @@ function Register() {
           <h1 className="text-3xl font-bold mb-2 text-gray-800 ml-3">
             Create an Account
           </h1>
-          <p className="text-sm text-gray-600 mb-6 ml-3">
+          <p className="text-m lg:text-sm text-gray-600 mb-6 ml-3">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
+            <Link
+              to="/login"
+              className="text-blue-500 text-lg lg:text-base hover:text-blue-700 transition-all duration-300"
+            >
               Log in
             </Link>
           </p>
@@ -155,7 +158,7 @@ function Register() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="px-8 py-3 bg-black text-white text-base rounded-full hover:bg-blue-600 transition"
+                className="px-8 py-3 bg-stone-800 text-white text-base rounded-full hover:bg-blue-600 transition duration-300"
               >
                 Sign Up
               </button>
@@ -177,7 +180,6 @@ function Register() {
               <FaFacebook className="w-6 h-6" />
             </button>
 
-            {/* Apple Icon Button */}
             <button className="flex items-center justify-center bg-gray-800 text-white p-3 rounded-full hover:bg-black transition">
               <FaApple className="w-6 h-6" />
             </button>

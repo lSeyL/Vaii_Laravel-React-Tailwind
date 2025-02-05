@@ -1,5 +1,11 @@
 import { useState } from "react";
-import api from "../../../services/api"; // API instance
+import api from "../../../services/api";
+import {
+  HiOutlinePencil,
+  HiOutlineTrash,
+  HiCheck,
+  HiOutlineXMark,
+} from "react-icons/hi2";
 
 function AdminUser({ user, setUsers }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -32,9 +38,10 @@ function AdminUser({ user, setUsers }) {
 
       console.log("🔄 Sending Update Request:", payload);
 
-      const response = await api.put(`/users/${user.id}`, payload);
+      const response = await api.post(`/users/${user.id}`, payload);
 
       console.log("✅ Update Success:", response.data);
+      console.log("✅ User id:", user.id);
       setUsers((prevUsers) =>
         prevUsers.map((u) => (u.id === user.id ? response.data.user : u))
       );
@@ -59,7 +66,7 @@ function AdminUser({ user, setUsers }) {
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow">
+    <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center text-center border border-gray-200">
       {isEditing ? (
         <>
           <input
@@ -68,7 +75,8 @@ function AdminUser({ user, setUsers }) {
             onChange={(e) =>
               setUpdatedUser({ ...updatedUser, name: e.target.value })
             }
-            className="border p-2 w-full mb-2"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"
+            placeholder="Name"
           />
           <input
             type="email"
@@ -76,7 +84,8 @@ function AdminUser({ user, setUsers }) {
             onChange={(e) =>
               setUpdatedUser({ ...updatedUser, email: e.target.value })
             }
-            className="border p-2 w-full mb-2"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"
+            placeholder="Email"
           />
           <input
             type="password"
@@ -84,37 +93,43 @@ function AdminUser({ user, setUsers }) {
             onChange={(e) =>
               setUpdatedUser({ ...updatedUser, password: e.target.value })
             }
-            className="border p-2 w-full mb-4"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"
           />
-          <button
-            onClick={handleUpdate}
-            className="bg-blue-500 text-white px-3 py-1 rounded-md"
-          >
-            Save
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="bg-gray-500 text-white px-3 py-1 rounded-md ml-2"
-          >
-            Cancel
-          </button>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleUpdate}
+              className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+            >
+              <HiCheck className="w-5 h-5" />
+              Save
+            </button>
+            <button
+              onClick={() => setIsEditing(false)}
+              className="flex items-center gap-2 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+            >
+              <HiOutlineXMark className="w-5 h-5" />
+              Cancel
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h2 className="text-lg font-semibold">{user.name}</h2>
+          <h2 className="text-xl font-semibold text-gray-900">{user.name}</h2>
           <p className="text-gray-600">{user.email}</p>
           <p className="text-gray-400">********</p>
-          <div className="mt-2 space-x-2">
+          <div className="flex space-x-2 mt-4">
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-yellow-500 text-white px-3 py-1 rounded-md"
+              className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
             >
+              <HiOutlinePencil className="w-5 h-5" />
               Edit
             </button>
             <button
               onClick={handleDelete}
-              className="bg-red-500 text-white px-3 py-1 rounded-md"
+              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
             >
+              <HiOutlineTrash className="w-5 h-5" />
               Delete
             </button>
           </div>
