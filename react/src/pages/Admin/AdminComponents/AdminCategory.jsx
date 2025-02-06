@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import api from "../../../services/api";
 import Modal from "../../../components/UI/Modal";
-import { toast } from "react-toastify";
 import {
   HiCheck,
   HiOutlineXMark,
