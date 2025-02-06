@@ -1,58 +1,16 @@
-import React, { createRef, useState } from "react";
-import api from "../../services/api";
 import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi";
-import { useStateContext } from "../../providers/userContext";
-import { validateUserCredentials } from "../../utils/validation";
+
+import { useLogin } from "./hooks/useLogin";
+
 function Login() {
-  const emailRef = createRef();
-  const passwordRef = createRef();
-  const { setUser, setToken, token } = useStateContext();
-  const [message, setMessage] = useState(null);
-  const navigate = useNavigate();
+  const { emailRef, passwordRef, message, handleInputChange, onSubmit, token } =
+    useLogin();
 
   if (token) {
     return <Navigate to="/profile" replace />;
   }
-  const handleInputChange = () => {
-    if (message) {
-      setMessage(null);
-    }
-  };
-
-  const onSubmit = (ev) => {
-    ev.preventDefault();
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    const error = validateUserCredentials(email, password);
-    if (error) {
-      setMessage(error);
-      return;
-    }
-    const payload = {
-      email,
-      password,
-    };
-
-    api
-      .post("/login", payload)
-      .then(({ data }) => {
-        setUser(data.user);
-        setToken(data.token);
-        navigate("/");
-        console.log("User logged in.");
-      })
-      .catch((err) => {
-        console.log("User login error");
-        const response = err.response;
-        if (response && response.status === 422) {
-          setMessage(response.data.message);
-        }
-      });
-  };
-  // .
-
 
   return (
     <div className="flex items-center justify-center min-h-screen">

@@ -1,60 +1,22 @@
-import React, { useRef, useState } from "react";
-
-import api from "../../services/api";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
-import { useStateContext } from "../../providers/userContext";
-import { validateUserCredentials } from "../../utils/validation";
+import { useSignup } from "./hooks/useSignup";
+
 function Register() {
-  const nameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmationRef = useRef();
-  const [message, setMessage] = useState(null);
-  const { setUser, setToken, token } = useStateContext();
-  const navigate = useNavigate();
+  const {
+    nameRef,
+    emailRef,
+    passwordRef,
+    passwordConfirmationRef,
+    message,
+    onSubmit,
+    token,
+  } = useSignup();
+
   if (token) {
     return <Navigate to="/profile" replace />;
   }
-  const onSubmit = (ev) => {
-    ev.preventDefault();
-    const name = nameRef.current.value;
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    const password_confirmation = passwordConfirmationRef.current.value;
-    const error = validateUserCredentials(
-      email,
-      password,
-      true,
-      password_confirmation
-    );
-    if (error) {
-      setMessage(error);
-      return;
-    }
-    const payload = {
-      name,
-      email,
-      password,
-      password_confirmation,
-    };
-    console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
-    api
-      .post("/signup", payload)
-      .then(({ data }) => {
-        setUser(data.user);
-        setToken(data.token);
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log("User signup error");
-        const response = err.response;
-        if (response && response.status === 422) {
-          setMessage(response.data.message);
-        }
-      });
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
