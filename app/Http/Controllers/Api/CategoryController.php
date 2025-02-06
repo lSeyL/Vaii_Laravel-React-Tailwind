@@ -35,7 +35,6 @@ class CategoryController extends Controller
         ]);
     
         $category = Category::create($validated);
-    
         return (new CategoryResource($category))
                 ->additional(['message' => 'Category created successfully'])
                 ->response()
@@ -62,18 +61,15 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $category = Category::find($id);
-
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-    
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $id,
             'description' => 'nullable|string',
         ]);
     
         $category->update($validated);
-    
         return (new CategoryResource($category))
                 ->additional(['message' => 'Category updated successfully'])
                 ->response()
@@ -86,13 +82,10 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::find($id);
-
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-
         $category->delete();
-
         return response()->json(['message' => 'Category deleted successfully'], 200);
     }
 }

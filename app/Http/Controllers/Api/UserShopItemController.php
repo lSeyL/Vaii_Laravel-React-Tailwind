@@ -65,6 +65,12 @@ class UserShopItemController extends Controller
         ], 200);
     }
 
+    public function getAllPurchases() {
+
+        $purchasedItems = ShopItem::whereHas('purchasedByUsers')->get();
+        return ShopitemResource::collection($purchasedItems);
+    }
+
 
     public function getUserPurchases()
     {

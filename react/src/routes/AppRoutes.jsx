@@ -25,6 +25,8 @@ import { useStateContext } from "../providers/userContext";
 import AdminSummary from "../pages/Admin/AdminSummary";
 import AdminAddProductForm from "../pages/Admin/AdminAddProductForm";
 import AdminEditProductForm from "../pages/Admin/AdminEditProductForm";
+import AdminCategories from "../pages/Admin/AdminCategories";
+import AdminAddCategoryForm from "../pages/Admin/AdminAddCategoryForm";
 
 function AppRoutes() {
   const { user } = useStateContext();
@@ -69,6 +71,8 @@ function AppRoutes() {
             { path: "products", element: <AdminProducts /> },
             { path: "add-product", element: <AdminAddProductForm /> },
             { path: "edit/:productId", element: <AdminEditProductForm /> },
+            { path: "categories", element: <AdminCategories /> },
+            { path: "add-category", element: <AdminAddCategoryForm /> },
           ],
         },
       ],

@@ -24,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shop_item_images', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('shop_item_images');
     }
 };

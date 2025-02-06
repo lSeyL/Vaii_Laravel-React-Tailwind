@@ -118,6 +118,49 @@ body {
             gap: 8px;
         }
     }
+    .edit-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #f59e0b;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: background-color 300ms ease-in-out;
+
+        &:hover {
+            background-color: #d97706;
+        }
+    }
+    .delete-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #ef4444;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: background-color 300ms ease-in-out;
+
+        &:hover {
+            background-color: #dc2626;
+        }
+    }
+
+    .home-button-black {
+        border: 2px solid #292524;
+        color: #292524;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        transition: all 300ms ease-in-out;
+        backdrop-filter: blur(2px);
+        background-color: transparent;
+
+        &:hover {
+            background-color: #57534e;
+            color: white;
+        }
+    }
 }
 
 @keyframes loading {

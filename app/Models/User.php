@@ -38,10 +38,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
-        public function shopItems()
+
+    public function shopItems()
     {
         return $this->belongsToMany(ShopItem::class, 'user_shop_item', 'user_id', 'shop_item_id');
     }
+    
     public function favoriteItems()
     {
         return $this->belongsToMany(ShopItem::class, 'user_favorite_items', 'user_id', 'shop_item_id')

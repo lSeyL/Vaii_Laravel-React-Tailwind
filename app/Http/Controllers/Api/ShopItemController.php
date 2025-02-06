@@ -164,6 +164,7 @@ class ShopItemController extends Controller
     {
         \Log::info("📥 Raw Request Data:", $request->all());
         \Log::info("📥 Request Headers:", $request->header());
+        \Log::info("📥 Raw Request Data (only input):", $request->except(['file']));
         $name = $request->input('name');
         $price = $request->input('price');
         $category_id = $request->input('category_id');
@@ -219,6 +220,7 @@ class ShopItemController extends Controller
         if ($request->has('file_type_ids')) {
             $shopItem->fileTypes()->sync($request->file_type_ids);
         }
+        
         \Log::info("🔄 Before saving:", $shopItem->toArray());
         $shopItem->save();
         \Log::info("✅ After saving:", $shopItem->toArray());

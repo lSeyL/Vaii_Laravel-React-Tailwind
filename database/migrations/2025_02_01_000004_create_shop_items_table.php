@@ -18,14 +18,14 @@ class CreateShopItemsTable extends Migration
             $table->text('description')->nullable();
             $table->text('long_description')->nullable();
             $table->decimal('price', 10, 2);
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('file_path');
             $table->string('image_file_path');
             $table->timestamps();
 
             $table->foreign('category_id')
                   ->references('id')->on('categories')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
         });
     }
 

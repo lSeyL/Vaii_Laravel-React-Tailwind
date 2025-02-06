@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class OrdersTableSeeder extends Seeder
 {
@@ -16,17 +17,31 @@ class OrdersTableSeeder extends Seeder
         DB::table('orders')->insert([
             [
                 'user_id' => 1, 
-                'total_amount' => 400.00,
+                'total_amount' => 0,
                 'status' => 'completed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'user_id' => 2,
-                'total_amount' => 100.00,
-                'status' => 'pending',
+                'total_amount' => 0,
+                'status' => 'completed',
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'user_id' => 1,
+                'total_amount' => 0,
+                'status' => 'completed',
+                'created_at' => Carbon::now()->subDays(7),
+                'updated_at' => Carbon::now()->subDays(7),
+            ],
+            [
+                'user_id' => 2,
+                'total_amount' => 0,
+                'status' => 'completed',
+                'created_at' => Carbon::now()->subDays(5),
+                'updated_at' => Carbon::now()->subDays(5),
             ],
             
         ]);

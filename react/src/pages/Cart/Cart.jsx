@@ -1,6 +1,7 @@
 import React from "react";
 import { useGlobalContext } from "../../providers/globalProvider";
 import { FaTrash } from "react-icons/fa";
+
 import CartItem from "./CartItem";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -50,10 +51,10 @@ function Cart() {
   const total = subtotal + tax;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row justify-center p-2 sm:p-10 md:p-24 gap-4 sm:gap-16">
+    <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row justify-center p-2 sm:p-6 md:p-12 gap-4 sm:gap-16">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full lg:w-2/3">
         <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
-        <div className="flex justify-between font-bold pb-2">
+        <div className="flex justify-between font-bold pb-2 ml-4 mr-20">
           <span>Product</span>
           <span>Price</span>
         </div>

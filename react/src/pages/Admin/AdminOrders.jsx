@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
+import { formatDate } from "../../utils/helpers";
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +34,7 @@ function AdminOrders() {
             <div key={order.id} className="border p-4 rounded-lg shadow-md">
               <p className="font-semibold">
                 Ordered by: {order.user.name} | Date:{" "}
-                {new Date(order.created_at).toLocaleDateString()}
+                {formatDate(order.created_at)}
               </p>
               <p>Items: {order.items_count}</p>
 

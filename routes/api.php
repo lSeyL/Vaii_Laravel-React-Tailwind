@@ -62,11 +62,17 @@ Route::middleware('auth:sanctum')->group(function () {
         //Produkty
         Route::get('/shop-items/all', [ShopItemController::class, 'index']);
         Route::post('/shop-items', [ShopItemController::class, 'store']);
-        Route::post('/shop-items/{id}', [ShopItemController::class, 'update']);
+        Route::put('/shop-items/{id}', [ShopItemController::class, 'update']);
+        Route::patch('/shop-items/{id}', [ShopItemController::class, 'update']);
         Route::delete('/shop-items/{id}', [ShopItemController::class, 'destroy']);
-        
+        //Kategorie
+        Route::post('/categories/create', [CategoryController::class, 'store']);
+        Route::put('/categories/update/{id}', [CategoryController::class, 'update']);
+        Route::patch('/categories/update/{id}', [CategoryController::class, 'update']);
+        Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy']);
         //Ordery
         Route::get('/admin/orders', [OrderController::class, 'getAllOrders']);
+        Route::get('/admin/get-orders', [UserShopItemController::class, 'getAllPurchases']);
 
     });
 });

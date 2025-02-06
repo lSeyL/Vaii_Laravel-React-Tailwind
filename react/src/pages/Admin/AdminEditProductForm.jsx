@@ -109,6 +109,7 @@ function AdminEditProductForm() {
       formData.append("name", newProduct.name);
       formData.append("price", newProduct.price);
       formData.append("category_id", newProduct.category_id);
+      formData.append("_method", "put");
       if (newProduct.image) formData.append("image", newProduct.image);
       if (newProduct.modelFile) formData.append("file", newProduct.modelFile);
       const entries = Object.fromEntries(formData.entries());

@@ -76,7 +76,7 @@ function AdminMain() {
             Products
           </NavLink>
           <NavLink
-            to="/admin/add-product"
+            to="/admin/categories"
             className={({ isActive }) =>
               `px-4 py-2 rounded-full transition-all duration-300 hover:bg-blue-600 ${
                 isActive
@@ -85,7 +85,31 @@ function AdminMain() {
               }`
             }
           >
+            Categories
+          </NavLink>
+          <NavLink
+            to="/admin/add-product"
+            className={({ isActive }) =>
+              `px-4 py-2 border-2 border-stone-800 rounded-full transition-all duration-300 hover:bg-blue-600 ${
+                isActive
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-700 hover:bg-gray-200"
+              }`
+            }
+          >
             Add product
+          </NavLink>
+          <NavLink
+            to="/admin/add-category"
+            className={({ isActive }) =>
+              `px-4 py-2 border-2 border-stone-800 rounded-full transition-all duration-300 hover:bg-blue-600 ${
+                isActive
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-700 hover:bg-gray-200"
+              }`
+            }
+          >
+            Add category
           </NavLink>
         </nav>
 

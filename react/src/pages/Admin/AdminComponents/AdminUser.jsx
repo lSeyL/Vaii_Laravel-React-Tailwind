@@ -118,17 +118,11 @@ function AdminUser({ user, setUsers }) {
           <p className="text-gray-600">{user.email}</p>
           <p className="text-gray-400">********</p>
           <div className="flex space-x-2 mt-4">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
-            >
+            <button onClick={() => setIsEditing(true)} className="edit-button">
               <HiOutlinePencil className="w-5 h-5" />
               Edit
             </button>
-            <button
-              onClick={handleDelete}
-              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
-            >
+            <button onClick={handleDelete} className="delete-button">
               <HiOutlineTrash className="w-5 h-5" />
               Delete
             </button>

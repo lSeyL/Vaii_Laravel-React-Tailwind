@@ -62,10 +62,10 @@ function Contact() {
                 className="w-full rounded-xl border contact-forms"
               ></textarea>
             </div>
-            <div>
+            <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="w-full bg-black text-white py-4 rounded-full hover:bg-blue-600 transition duration-300 text-lg font-semibold"
+                className="w-2/3 md:w-2/3 lg:w-1/3  bg-black text-white py-4 rounded-full hover:bg-blue-600 transition duration-300 text-lg font-semibold"
               >
                 Submit
               </button>

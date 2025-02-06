@@ -1,6 +1,7 @@
 import { HiOutlineArrowTopRightOnSquare } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
+import MiddleInfo from "./Home/MiddleInfo";
 
 function Home() {
   const imgSmallCard =
@@ -162,6 +163,8 @@ function Home() {
           </div>
         </div>
       </div>
+
+      <MiddleInfo />
 
       <div className="flex flex-col md:flex-row min-h-screen p-5 md:p-5 lg:p-5 xl:p-20 gap-4">
         <div className="flex-1 rounded-lg shadow-lg relative md:mr-1">

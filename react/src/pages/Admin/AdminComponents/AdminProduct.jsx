@@ -1,6 +1,7 @@
 import { useState } from "react";
-import api from "../../../services/api"; // API instance
+import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
+import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
 
 function AdminProduct({ product, setProducts }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,20 +34,25 @@ function AdminProduct({ product, setProducts }) {
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow bg-white w-full box-border">
-      <h2 className="text-lg font-semibold">{product.name}</h2>
-      <p className="text-gray-600">{product.price} €</p>
-      <div className="mt-2 space-x-2">
-        <button
-          onClick={handleEdit}
-          className="bg-yellow-500 text-white px-3 py-1 rounded-md"
-        >
+    <div className="border p-6 rounded-2xl shadow-lg bg-white w-full max-w-sm box-border flex flex-col items-center text-center">
+      <img
+        src={product.image_file_path}
+        alt={product.name}
+        className="w-40 h-40 object-cover rounded-lg mb-4"
+      />
+      <h2 className="text-xl font-bold text-gray-900">{product.name}</h2>
+      <p className="text-lg text-gray-700 font-medium mt-1">
+        {product.price} €
+      </p>
+      <p className="text-sm text-gray-600 mt-2">{product.description}</p>
+
+      <div className="mt-4 flex gap-3">
+        <button onClick={handleEdit} className="edit-button">
+          <HiOutlinePencil className="w-5 h-5" />
           Edit
         </button>
-        <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white px-3 py-1 rounded-md"
-        >
+        <button onClick={handleDelete} className="delete-button">
+          <HiOutlineTrash className="w-5 h-5" />
           Delete
         </button>
       </div>
