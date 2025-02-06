@@ -30,16 +30,46 @@ function UserAccountSettings() {
 
     try {
       console.log(formData);
+
       if (user.role === "admin") {
         setMessage({ type: "error", text: "Cannot update an admin." });
         return;
       }
+      const nameChanged = formData.name && formData.name !== user.name;
+      const emailChanged = formData.email && formData.email !== user.email;
+      const passwordChanged = formData.oldPassword && formData.newPassword;
+
+      if (!nameChanged && !emailChanged && !passwordChanged) {
+        setMessage({ type: "error", text: "No changes were made." });
+        return;
+      }
+      if (!formData.name) {
+        setMessage({ type: "error", text: "User needs a name." });
+        return;
+      }
+      if (!formData.email) {
+        setMessage({ type: "error", text: "User needs an email." });
+        return;
+      }
+      if (passwordChanged) {
+        if (!formData.oldPassword) {
+          setMessage({
+            type: "error",
+            text: "Old password is required to change password.",
+          });
+          return;
+        }
+        if (!formData.newPassword) {
+          setMessage({ type: "error", text: "New password cannot be empty." });
+          return;
+        }
+      }
 
       const response = await api.post("/profile-update", {
-        name: formData.name,
-        email: formData.email,
-        old_password: formData.oldPassword || null,
-        new_password: formData.newPassword || null,
+        name: nameChanged ? formData.name : undefined,
+        email: emailChanged ? formData.email : undefined,
+        old_password: passwordChanged ? formData.oldPassword : undefined,
+        new_password: passwordChanged ? formData.newPassword : undefined,
       });
 
       setUser(response.data.user);
@@ -91,7 +121,7 @@ function UserAccountSettings() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
           <label className="block pl-3 text-sm font-medium text-gray-700">
             Name
