@@ -69,31 +69,31 @@ function About() {
         </p>
       </div>
 
-      <div className="mt-12 w-full flex flex-wrap justify-center items-center gap-8">
+      <div className="sponsor-container">
         <img
           src="/sponsor/blender.png"
           alt="Sponsor 1"
-          className="h-12 object-contain"
+          className="sponsor-obj"
         />
         <img
           src="/sponsor/blender.png"
           alt="Sponsor 2"
-          className="h-12 object-contain"
+          className="sponsor-obj"
         />
         <img
           src="/sponsor/blender.png"
           alt="Sponsor 3"
-          className="h-12 object-contain"
+          className="sponsor-obj"
         />
         <img
           src="/sponsor/blender.png"
           alt="Sponsor 4"
-          className="h-12 object-contain"
+          className="sponsor-obj"
         />
         <img
           src="/sponsor/blender.png"
           alt="Sponsor 5"
-          className="h-12 object-contain"
+          className="sponsor-obj"
         />
       </div>
     </div>

@@ -21,14 +21,10 @@ function Checkout() {
 
     try {
       console.log("🛒 Sending purchase request:", cart);
-
       const response = await api.post("/purchase", { cart });
-
       console.log("✅ Purchase Successful:", response.data);
-
       clearCart();
       setIsLoading(false);
-
       if (!token) {
         navigate("/", { replace: true });
       } else {
@@ -62,78 +58,63 @@ function Checkout() {
         </h1>
         <form className="space-y-6">
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm ml-2 font-medium text-gray-700"
-            >
+            <label htmlFor="name" className="checkout-label">
               Name
             </label>
             <input
               id="name"
               type="text"
               placeholder="Enter your name"
-              className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+              className="w-full checkout-field "
             />
           </div>
 
           <div>
-            <label
-              htmlFor="cardNumber"
-              className="block text-sm ml-2 font-medium text-gray-700"
-            >
+            <label htmlFor="cardNumber" className="checkout-label">
               Card Number
             </label>
             <input
               id="cardNumber"
               type="text"
               placeholder="1234 5678 9012 3456"
-              className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+              className="w-full checkout-field"
             />
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1">
-              <label
-                htmlFor="expiryDate"
-                className="block text-sm ml-2 font-medium text-gray-700"
-              >
+              <label htmlFor="expiryDate" className="checkout-label">
                 Expiry Date
               </label>
               <input
                 id="expiryDate"
                 type="text"
                 placeholder="MM/YY"
-                className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-full checkout-field"
               />
             </div>
             <div className="flex-1">
-              <label
-                htmlFor="cvv"
-                className="block text-sm ml-2 font-medium text-gray-700"
-              >
+              <label htmlFor="cvv" className="checkout-label">
                 CVV
               </label>
               <input
                 id="cvv"
                 type="text"
                 placeholder="123"
-                className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                className="w-full checkout-field"
               />
             </div>
           </div>
 
           <div>
-            <label
-              htmlFor="billingAddress"
-              className="block text-sm ml-2 font-medium text-gray-700"
-            >
+            <label htmlFor="billingAddress" className="checkout-label">
               Billing Address
             </label>
             <input
               id="billingAddress"
               type="text"
               placeholder="Enter your address"
-              className="w-full border border-gray-300 rounded-full p-3 mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+              className="w-full checkout-field"
             />
           </div>
 
@@ -142,10 +123,7 @@ function Checkout() {
             <span className="text-2xl text-blue-500">€{total.toFixed(2)}</span>
           </div>
 
-          <button
-            className="bg-blue-500 text-white py-3 px-8 rounded-full  hover:bg-blue-600 transition duration-300 text-lg font-semibold mx-auto block"
-            onClick={handleBuyItems}
-          >
+          <button className="checkout-payButton" onClick={handleBuyItems}>
             Confirm and Pay
           </button>
         </form>

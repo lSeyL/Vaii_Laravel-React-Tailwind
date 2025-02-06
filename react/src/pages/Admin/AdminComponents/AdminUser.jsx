@@ -6,9 +6,11 @@ import {
   HiCheck,
   HiOutlineXMark,
 } from "react-icons/hi2";
-
+import Modal from "../../../components/UI/Modal";
+import { toast } from "react-toastify";
 function AdminUser({ user, setUsers }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedUser, setUpdatedUser] = useState({
     name: user.name,
     email: user.email,
@@ -46,22 +48,31 @@ function AdminUser({ user, setUsers }) {
         prevUsers.map((u) => (u.id === user.id ? response.data.user : u))
       );
       setIsEditing(false);
+      toast.succes(`${user.name} updated!`);
     } catch (error) {
       console.error(
         "❌ Error updating user:",
         error.response?.data || error.message
       );
+      toast.error(`${user.name} failed to update!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete "${user.name}"?`)) {
-      try {
-        await api.delete(`/users/${user.id}`);
-        setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
-      } catch (error) {
-        console.error("❌ Error deleting user:", error);
-      }
+    if (user.role === "admin") {
+      setIsModalOpen(false);
+      toast.error(`Cannot delete an admin!`);
+      return;
+    }
+    try {
+      await api.delete(`/users/${user.id}`);
+      setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+      toast.success(`${user.name} deleted!`);
+    } catch (error) {
+      console.error("❌ Error deleting user:", error);
+      toast.error(`${user.name} failed to delete!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 
@@ -122,13 +133,25 @@ function AdminUser({ user, setUsers }) {
               <HiOutlinePencil className="w-5 h-5" />
               Edit
             </button>
-            <button onClick={handleDelete} className="delete-button">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="delete-button"
+            >
               <HiOutlineTrash className="w-5 h-5" />
               Delete
             </button>
           </div>
         </>
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Confirm User Deletion"
+        message={`Are you sure you want to delete "${user.name}"?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

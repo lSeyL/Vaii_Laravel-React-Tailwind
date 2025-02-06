@@ -28,11 +28,13 @@ class ShopItemController extends Controller
     {
         $perPage = $request->input('per_page', 9);
         \Log::info('Search function triggered', ['query' => $request->all()]);
-        $query = ShopItem::with('category', 'fileTypes')->withCount('purchasedByUsers');
+        $query = ShopItem::with('category','fileTypes', 'additionalImages')->withCount('purchasedByUsers');
 
         if ($request->has('name')) {
             $name = $request->input('name');
             $query->where('name', 'LIKE', "%{$name}%");
+        } else {
+            $query->whereDoesntHave('name');
         }
 
         if ($request->has('category')) {
@@ -40,11 +42,14 @@ class ShopItemController extends Controller
             $query->whereHas('category', function ($q) use ($category) {
                 $q->where('name', 'LIKE', "%{$category}%");
             });
+        } else {
+            $query->whereDoesntHave('category');
         }
-
+        /*
         if ($request->has('min_price') && $request->has('max_price')) {
             $query->whereBetween('price', [$request->input('min_price'), $request->input('max_price')]);
         }
+        */
         $shopItems = $query->paginate($perPage);
         return ShopItemResource::collection($shopItems);
     }
@@ -220,7 +225,7 @@ class ShopItemController extends Controller
         if ($request->has('file_type_ids')) {
             $shopItem->fileTypes()->sync($request->file_type_ids);
         }
-        
+
         \Log::info("🔄 Before saving:", $shopItem->toArray());
         $shopItem->save();
         \Log::info("✅ After saving:", $shopItem->toArray());

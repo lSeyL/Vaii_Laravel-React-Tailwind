@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { HiPlus } from "react-icons/hi";
+import { toast } from "react-toastify";
 
 function AdminEditProductForm() {
   const { productId } = useParams();
@@ -139,13 +140,15 @@ function AdminEditProductForm() {
         await api.post("/shop-items", formData);
         console.log("✅ Product created successfully");
       }
-
       navigate("/admin/products");
+      toast.success(`${newProduct.name} updated!`);
     } catch (error) {
       console.error(
         "❌ Error saving product:",
         error.response?.data || error.message
       );
+      toast.error(`${newProduct.name} failed to update!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 

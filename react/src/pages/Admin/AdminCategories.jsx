@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AdminCategory from "./AdminComponents/AdminCategory";
+import PaginationControls from "./../../components/UI/PaginationControls";
 
 function AdminCategories() {
   const [categories, setCategories] = useState([]);
@@ -15,10 +16,11 @@ function AdminCategories() {
   const fetchCategories = async (page) => {
     try {
       const response = await api.get(`/categories?page=${page}`);
-      setCategories(response.data.data); // paginated items
+      setCategories(response.data.data);
       setCurrentPage(response.data.meta.current_page);
       setLastPage(response.data.meta.last_page);
     } catch (error) {
+      toast.error(Object.values(error.response?.data.errors).join(", "));
       console.error("Error fetching categories:", error);
     }
   };
@@ -43,27 +45,11 @@ function AdminCategories() {
         </div>
       )}
 
-      <div className="flex items-center justify-center gap-4 mt-8">
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft className="text-xl" />
-        </button>
-
-        <span className="text-lg font-semibold">
-          Page {currentPage} of {lastPage}
-        </span>
-
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, lastPage))}
-          disabled={currentPage === lastPage}
-        >
-          <FaChevronRight className="text-xl" />
-        </button>
-      </div>
+      <PaginationControls
+        currentPage={currentPage}
+        lastPage={lastPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import api from "../../../services/api";
+import Modal from "../../../components/UI/Modal";
+import { toast } from "react-toastify";
 import {
   HiCheck,
   HiOutlineXMark,
@@ -9,6 +11,7 @@ import {
 
 function AdminCategory({ category, setCategories }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedCategory, setUpdatedCategory] = useState({
     name: category.name,
     description: category.description || "",
@@ -34,11 +37,14 @@ function AdminCategory({ category, setCategories }) {
       );
 
       setIsEditing(false);
+      toast.success(`${updatedCategory.name} updated!`);
     } catch (error) {
       console.error(
         "❌ Error updating category:",
         error.response?.data || error.message
       );
+      toast.error(`${updatedCategory.name} failed to update!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
   const handleDelete = async () => {
@@ -46,11 +52,14 @@ function AdminCategory({ category, setCategories }) {
       await api.delete(`/categories/delete/${category.id}`);
       console.log("✅ Category deleted successfully");
       setCategories((prev) => prev.filter((cat) => cat.id !== category.id));
+      toast.success(`${updatedCategory.name} deleted!`);
     } catch (error) {
       console.error(
         "❌ Error deleting category:",
         error.response?.data || error.message
       );
+      toast.error(`${updatedCategory.name} failed to delete!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 
@@ -107,13 +116,25 @@ function AdminCategory({ category, setCategories }) {
               <HiOutlinePencil className="w-5 h-5" />
               Edit
             </button>
-            <button onClick={handleDelete} className="delete-button">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="delete-button"
+            >
               <HiOutlineTrash className="w-5 h-5" />
               Delete
             </button>
           </div>
         </>
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Confirm Category Deletion"
+        message={`Are you sure you want to delete "${category.name}"?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

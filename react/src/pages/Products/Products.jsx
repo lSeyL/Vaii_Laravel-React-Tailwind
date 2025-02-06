@@ -1,8 +1,9 @@
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Loader from "../../components/UI/Loader";
 import ProductItem from "./ProductItem";
 import useProducts from "./hooks/useProducts";
 import CategoryFilter from "./CategoryFilter";
+import PaginationControls from "./../../components/UI/PaginationControls";
+
 function Products() {
   const { products, isLoading, currentPage, lastPage, setCurrentPage } =
     useProducts();
@@ -22,29 +23,11 @@ function Products() {
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <button
-              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              <FaChevronLeft className="text-xl" />
-            </button>
-
-            <span className="text-lg font-semibold">
-              Page {currentPage} of {lastPage}
-            </span>
-
-            <button
-              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, lastPage))
-              }
-              disabled={currentPage === lastPage}
-            >
-              <FaChevronRight className="text-xl" />
-            </button>
-          </div>
+          <PaginationControls
+            currentPage={currentPage}
+            lastPage={lastPage}
+            setCurrentPage={setCurrentPage}
+          />
         </>
       )}
     </div>

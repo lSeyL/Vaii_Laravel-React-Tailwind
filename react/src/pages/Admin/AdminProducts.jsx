@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../../services/api";
 import { useSearchParams } from "react-router-dom";
 import AdminProduct from "./AdminComponents/AdminProduct";
-import { NavLink } from "react-router-dom";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
+import PaginationControls from "./../../components/UI/PaginationControls";
 function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,11 +40,11 @@ function AdminProducts() {
   return (
     <div className="w-full h-full p-6 bg-white rounded-xl shadow-lg">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Manage Users
+        Manage Products
       </h2>
 
       {products.length === 0 ? (
-        <p className="text-center text-gray-500">No users found.</p>
+        <p className="text-center text-gray-500">No products found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {products.map((product) => (
@@ -58,27 +56,11 @@ function AdminProducts() {
           ))}
         </div>
       )}
-      <div className="flex items-center justify-center gap-4 mt-8">
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft className="text-xl" />
-        </button>
-
-        <span className="text-lg font-semibold">
-          Page {currentPage} of {lastPage}
-        </span>
-
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, lastPage))}
-          disabled={currentPage === lastPage}
-        >
-          <FaChevronRight className="text-xl" />
-        </button>
-      </div>
+      <PaginationControls
+        currentPage={currentPage}
+        lastPage={lastPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }

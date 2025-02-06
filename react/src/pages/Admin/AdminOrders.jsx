@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { formatDate } from "../../utils/helpers";
+import PaginationControls from "./../../components/UI/PaginationControls";
+import AdminOrder from "./AdminComponents/AdminOrder";
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,52 +30,15 @@ function AdminOrders() {
         {orders.length === 0 ? (
           <p>No orders found.</p>
         ) : (
-          orders.map((order) => (
-            <div key={order.id} className="border p-4 rounded-lg shadow-md">
-              <p className="font-semibold">
-                Ordered by: {order.user.name} | Date:{" "}
-                {formatDate(order.created_at)}
-              </p>
-              <p>Items: {order.items_count}</p>
-
-              <details className="mt-2">
-                <summary className="cursor-pointer text-blue-600">
-                  View Items
-                </summary>
-                <ul className="mt-2 space-y-1">
-                  {order.items.map((item) => (
-                    <li key={item.id} className="border p-2 rounded-md">
-                      {item.name} - {item.price} €
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </div>
-          ))
+          orders.map((order) => <AdminOrder order={order} />)
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-4 mt-8">
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft className="text-xl" />
-        </button>
-
-        <span className="text-lg font-semibold">
-          Page {currentPage} of {lastPage}
-        </span>
-
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, lastPage))}
-          disabled={currentPage === lastPage}
-        >
-          <FaChevronRight className="text-xl" />
-        </button>
-      </div>
+      <PaginationControls
+        currentPage={currentPage}
+        lastPage={lastPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../services/api";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function AdminAddCategoryForm({ onCategoryCreated }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,6 +13,7 @@ function AdminAddCategoryForm({ onCategoryCreated }) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +30,8 @@ function AdminAddCategoryForm({ onCategoryCreated }) {
       }
       setFormData({ name: "", description: "" });
       console.log("✅ Category created successfully");
+      navigate("/admin/categories");
+      toast.success(`${formData.name} added!`);
     } catch (err) {
       console.error(
         "❌ Error creating category:",
@@ -37,6 +41,8 @@ function AdminAddCategoryForm({ onCategoryCreated }) {
         err.response?.data?.message ||
           "An error occurred while creating the category"
       );
+      toast.error(`${formData.name} failed!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     } finally {
       setIsSubmitting(false);
     }

@@ -22,8 +22,14 @@ const useProducts = () => {
           category,
         });
 
+        const params = {
+          page: currentPage,
+          name: searchQuery,
+          category: category,
+        };
+
         const response = await api.get(`/shop-items/search`, {
-          params: { page: currentPage, name: searchQuery, category },
+          params,
         });
 
         console.log("✅ Server Response:", response.data);

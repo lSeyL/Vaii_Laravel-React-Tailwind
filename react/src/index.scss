@@ -122,14 +122,14 @@ body {
         display: flex;
         align-items: center;
         gap: 8px;
-        background-color: #f59e0b;
+        background-color: #ffb923;
         color: white;
         padding: 8px 16px;
-        border-radius: 6px;
+        border-radius: 999px;
         transition: background-color 300ms ease-in-out;
 
         &:hover {
-            background-color: #d97706;
+            background-color: #e9a91e;
         }
     }
     .delete-button {
@@ -139,7 +139,7 @@ body {
         background-color: #ef4444;
         color: white;
         padding: 8px 16px;
-        border-radius: 6px;
+        border-radius: 999px;
         transition: background-color 300ms ease-in-out;
 
         &:hover {
@@ -159,6 +159,110 @@ body {
         &:hover {
             background-color: #57534e;
             color: white;
+        }
+    }
+
+    .checkout-field {
+        border: 1px solid #d1d5db;
+        border-radius: 9999px;
+        padding: 12px;
+        margin-top: 4px;
+        font-size: 1.125rem;
+        outline: none;
+        transition: box-shadow 200ms ease-in-out;
+
+        &:focus {
+            box-shadow: 0 0 0 2px #292524;
+        }
+    }
+
+    .modal-confirm {
+        padding: 8px 16px;
+        background-color: #dc2626;
+        color: white;
+        border-radius: 9999px;
+        transition: all 300ms ease-in-out;
+
+        &:hover {
+            background-color: #b91c1c;
+        }
+    }
+
+    .modal-cancel {
+        padding: 8px 16px;
+        background-color: #292524;
+        color: white;
+        border-radius: 9999px;
+        transition: all 300ms ease-in-out;
+
+        &:hover {
+            background-color: #57534e;
+        }
+    }
+
+    .sponsor-container {
+        margin-top: 48px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+    }
+
+    .sponsor-obj {
+        height: 48px;
+        object-fit: contain;
+    }
+
+    .checkout-payButton {
+        background-color: #3b82f6;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 9999px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        transition: background-color 300ms ease-in-out;
+
+        &:hover {
+            background-color: #2563eb;
+        }
+    }
+
+    .checkout-label {
+        display: block;
+        font-size: 0.875rem;
+        margin-left: 8px;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .logo-main {
+        font-size: 1.875rem;
+    }
+
+    .admin-button {
+        padding: 8px 16px; 
+        border: 2px solid #292524; 
+        border-radius: 9999px; 
+        transition: all 300ms ease-in-out; 
+        color: #374151; 
+        background-color: transparent;
+
+        &:hover {
+            background-color: #e5e7eb; 
+        }
+
+        &.active {
+            background-color: #3b82f6; 
+            color: white; 
+        }
+
+        &:hover.active {
+            background-color: #2563eb; 
         }
     }
 }

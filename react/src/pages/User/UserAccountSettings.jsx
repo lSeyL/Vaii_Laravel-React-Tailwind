@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useStateContext } from "../../providers/userContext";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/UI/Modal";
 
 function UserAccountSettings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,7 @@ function UserAccountSettings() {
         setMessage({ type: "error", text: "Cannot update an admin." });
         return;
       }
+
       const response = await api.post("/profile-update", {
         name: formData.name,
         email: formData.email,
@@ -79,8 +81,10 @@ function UserAccountSettings() {
 
       {message && (
         <div
-          className={`p-3 rounded-md mb-5 text-white ${
-            message.type === "success" ? "bg-green-500" : "bg-red-500"
+          className={`p-3 border-2 rounded-md mb-5 ${
+            message.type === "success"
+              ? "bg-lime-100 border-lime-600 text-lime-600"
+              : "bg-red-200 border-red-600 text-red-600"
           }`}
         >
           {message.text}
@@ -169,28 +173,17 @@ function UserAccountSettings() {
       </form>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white mx-5 md:mx-0 p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-lg font-bold">Confirm Account Deletion</h2>
-            <p className="mt-2">
-              Are you sure you want to delete your account?
-            </p>
-            <div className="flex justify-center mt-4 space-x-4">
-              <button
-                onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-full transition-all duration-300 hover:bg-red-700"
-              >
-                Yes, Delete
-              </button>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-white bg-stone-800 rounded-full transition-all duration-300 hover:bg-stone-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <>
+          <Modal
+            isOpen={isModalOpen}
+            onCancel={() => setIsModalOpen(false)}
+            onConfirm={confirmDelete}
+            title="Confirm Account Deletion"
+            message="Are you sure you want to delete your account?"
+            confirmText="Yes, Delete"
+            cancelText="Cancel"
+          />
+        </>
       )}
     </div>
   );

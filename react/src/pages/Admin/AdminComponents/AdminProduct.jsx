@@ -2,9 +2,11 @@ import { useState } from "react";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
-
+import Modal from "../../../components/UI/Modal";
+import { toast } from "react-toastify";
 function AdminProduct({ product, setProducts }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [updatedProduct, setUpdatedProduct] = useState({
     name: product.name,
@@ -16,20 +18,22 @@ function AdminProduct({ product, setProducts }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
-      try {
-        console.log(`🛒 Sending DELETE request for product ID: ${product.id}`);
-        await api.delete(`/shop-items/${product.id}`);
-        console.log(`✅ Product ID ${product.id} deleted successfully`);
-        setProducts((prevProducts) =>
-          prevProducts.filter((p) => p.id !== product.id)
-        );
-      } catch (error) {
-        console.error(
-          "❌ Error deleting product:",
-          error.response?.data || error.message
-        );
-      }
+    try {
+      console.log(`🛒 Sending DELETE request for product ID: ${product.id}`);
+      await api.delete(`/shop-items/${product.id}`);
+      console.log(`✅ Product ID ${product.id} deleted successfully`);
+      setProducts((prevProducts) =>
+        prevProducts.filter((p) => p.id !== product.id)
+      );
+      setIsModalOpen(false);
+      toast.info(`${product.name} deleted!`);
+    } catch (error) {
+      console.error(
+        "❌ Error deleting product:",
+        error.response?.data || error.message
+      );
+      toast.error(`${product.name} failed to delete!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 
@@ -51,11 +55,21 @@ function AdminProduct({ product, setProducts }) {
           <HiOutlinePencil className="w-5 h-5" />
           Edit
         </button>
-        <button onClick={handleDelete} className="delete-button">
+        <button onClick={() => setIsModalOpen(true)} className="delete-button">
           <HiOutlineTrash className="w-5 h-5" />
           Delete
         </button>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Confirm Product Deletion"
+        message={`Are you sure you want to delete "${product.name}"?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

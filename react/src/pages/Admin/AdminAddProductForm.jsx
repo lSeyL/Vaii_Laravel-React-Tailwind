@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import api from "../../services/api";
 import { HiPlus } from "react-icons/hi";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function AdminAddProductForm() {
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -13,16 +14,13 @@ function AdminAddProductForm() {
     modelFile: null,
     additionalImages: [],
   });
-
   const [categories, setCategories] = useState([]);
   const [fileTypes, setFileTypes] = useState([]);
-
   const [selectedImages, setSelectedImages] = useState([]);
-
+  const navigate = useNavigate();
   const handleAdditionalImages = (event) => {
     const files = Array.from(event.target.files);
     //console.log("📸 Selected Files:", files);
-
     if (files.length > 0) {
       setNewProduct((prevState) => ({
         ...prevState,
@@ -41,7 +39,6 @@ function AdminAddProductForm() {
       try {
         const categoryResponse = await api.get("/categories");
         const fileTypeResponse = await api.get("/file-types");
-
         setCategories(categoryResponse.data.data);
         setFileTypes(fileTypeResponse.data.data);
       } catch (error) {
@@ -94,16 +91,18 @@ function AdminAddProductForm() {
         console.log("☑️Additional file: ", file);
       });
 
-      console.log("☑️ Images:", newProduct.additionalImages);
-
+      //console.log("☑️ Images:", newProduct.additionalImages);
       const response = await api.post("/shop-items", formData);
-
-      console.log("✅ Product added successfully:", response.data);
+      //console.log("✅ Product added successfully:", response.data);
+      navigate("/admin/products");
+      toast.success(`${newProduct.name} added!`);
     } catch (error) {
       console.error(
         "❌ Error adding product:",
         error.response?.data || error.message
       );
+      toast.error(`${newProduct.name} failed to add!`);
+      toast.error(Object.values(error.response?.data.errors).join(", "));
     }
   };
 

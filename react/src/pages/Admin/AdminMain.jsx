@@ -90,11 +90,7 @@ function AdminMain() {
           <NavLink
             to="/admin/add-product"
             className={({ isActive }) =>
-              `px-4 py-2 border-2 border-stone-800 rounded-full transition-all duration-300 hover:bg-blue-600 ${
-                isActive
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`
+              `admin-button ${isActive ? "active" : ""}`
             }
           >
             Add product
@@ -102,11 +98,7 @@ function AdminMain() {
           <NavLink
             to="/admin/add-category"
             className={({ isActive }) =>
-              `px-4 py-2 border-2 border-stone-800 rounded-full transition-all duration-300 hover:bg-blue-600 ${
-                isActive
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`
+              `admin-button ${isActive ? "active" : ""}`
             }
           >
             Add category

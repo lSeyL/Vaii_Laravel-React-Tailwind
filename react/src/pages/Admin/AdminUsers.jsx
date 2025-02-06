@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import AdminUser from "./AdminComponents/AdminUser";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
+import PaginationControls from "./../../components/UI/PaginationControls";
 function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,27 +49,11 @@ function AdminUsers() {
           ))}
         </div>
       )}
-      <div className="flex items-center justify-center gap-4 mt-8">
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft className="text-xl" />
-        </button>
-
-        <span className="text-lg font-semibold">
-          Page {currentPage} of {lastPage}
-        </span>
-
-        <button
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, lastPage))}
-          disabled={currentPage === lastPage}
-        >
-          <FaChevronRight className="text-xl" />
-        </button>
-      </div>
+      <PaginationControls
+        currentPage={currentPage}
+        lastPage={lastPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }
