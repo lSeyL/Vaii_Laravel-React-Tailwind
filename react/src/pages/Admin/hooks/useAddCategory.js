@@ -23,6 +23,13 @@ export function useAddCategory(onCategoryCreated) {
     setError("");
 
     try {
+      if (!formData.name) {
+        toast.error(`Category requires a name.`);
+        return;
+      }
+      if (!formData.description) {
+        toast.info(`No description.`);
+      }
       await api.post("/categories/create", {
         name: formData.name,
         description: formData.description,

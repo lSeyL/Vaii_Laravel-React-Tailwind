@@ -82,6 +82,23 @@ export function useAddProduct() {
         formData.append("additional_images[]", file);
       });
 
+      if (!newProduct.name) {
+        toast.error(`Name required.`);
+      }
+      if (!newProduct.price) {
+        toast.error(`Price required.`);
+      }
+      if (!newProduct.category_id) {
+        toast.error(`Category required.`);
+      }
+      if (!newProduct.image) {
+        toast.error(`Image required.`);
+      }
+      if (!newProduct.modelFile) {
+        toast.error(`3D model file required.`);
+        return;
+      }
+
       const response = await api.post("/shop-items", formData);
       console.log("✅ Product added successfully:", response.data);
       navigate("/admin/products");

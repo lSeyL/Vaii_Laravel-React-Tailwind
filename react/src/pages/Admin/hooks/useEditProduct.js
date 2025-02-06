@@ -113,6 +113,17 @@ export function useEditProduct() {
         console.log(pair[0] + ":", pair[1]);
       }
 
+      if (!newProduct.name) {
+        toast.error(`Name required.`);
+      }
+      if (!newProduct.price) {
+        toast.error(`Price required.`);
+      }
+      if (!newProduct.category_id) {
+        toast.error(`Category required.`);
+        return;
+      }
+
       if (productId) {
         await api.post(`/shop-items/${productId}`, formData, {
           headers: {

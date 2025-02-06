@@ -12,6 +12,14 @@ export function useACategory(category, setCategories) {
 
   const handleUpdate = async () => {
     try {
+      if (!updatedCategory.name) {
+        toast.error(`Name required!`);
+        return;
+      }
+      if (!updatedCategory.description) {
+        toast.info(`No description.`);
+      }
+
       await api.put(`/categories/update/${category.id}`, {
         name: updatedCategory.name,
         description: updatedCategory.description,

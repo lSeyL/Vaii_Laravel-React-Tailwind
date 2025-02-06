@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../../../services/api";
 import { toast } from "react-toastify";
+import { validateUserCredentials } from "../../../../utils/validation";
 
 export function useAUser(user, setUsers) {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,7 +15,8 @@ export function useAUser(user, setUsers) {
   const handleUpdate = async () => {
     try {
       const payload = {};
-
+      let isPasswordChanged = false;
+      let isEmailChanged = false;
       if (updatedUser.name !== user.name) {
         payload.name = updatedUser.name;
       }
@@ -25,17 +27,34 @@ export function useAUser(user, setUsers) {
 
       if (updatedUser.password) {
         payload.new_password = updatedUser.password;
+        isPasswordChanged = true;
       }
 
       if (Object.keys(payload).length === 0) {
         setIsEditing(false);
         return;
       }
+      if (!updatedUser.name) {
+        toast.error(`User needs a name!`);
+      }
+      if (!updatedUser.email) {
+        toast.error(`User needs an email!`);
+      }
+      if (isPasswordChanged) {
+        if (!updatedUser.password) {
+          toast.error(`Password cant be null!`);
+          return;
+        }
+      }
+      if (isEmailChanged) {
+        if (!updatedUser.email) {
+          toast.error(`Email cant be null!`);
+          return;
+        }
+      }
 
       console.log("🔄 Sending Update Request:", payload);
-
       const response = await api.post(`/users/${user.id}`, payload);
-
       console.log("✅ Update Success:", response.data);
       setUsers((prevUsers) =>
         prevUsers.map((u) => (u.id === user.id ? response.data.user : u))

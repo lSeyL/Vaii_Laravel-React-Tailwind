@@ -16,7 +16,11 @@ function AdminAddCategoryForm({ onCategoryCreated }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col space-y-4"
+          noValidate
+        >
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Category Name
