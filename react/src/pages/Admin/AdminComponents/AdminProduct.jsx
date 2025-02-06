@@ -1,41 +1,12 @@
-import { useState } from "react";
-import api from "../../../services/api";
-import { useNavigate } from "react-router-dom";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi2";
 import Modal from "../../../components/UI/Modal";
-import { toast } from "react-toastify";
+import { useAProduct } from "./hooks/useAProduct";
+
 function AdminProduct({ product, setProducts }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const [updatedProduct, setUpdatedProduct] = useState({
-    name: product.name,
-    price: product.price,
-  });
-
-  const handleEdit = () => {
-    navigate(`/admin/edit/${product.id}`, { state: { product } });
-  };
-
-  const handleDelete = async () => {
-    try {
-      console.log(`🛒 Sending DELETE request for product ID: ${product.id}`);
-      await api.delete(`/shop-items/${product.id}`);
-      console.log(`✅ Product ID ${product.id} deleted successfully`);
-      setProducts((prevProducts) =>
-        prevProducts.filter((p) => p.id !== product.id)
-      );
-      setIsModalOpen(false);
-      toast.info(`${product.name} deleted!`);
-    } catch (error) {
-      console.error(
-        "❌ Error deleting product:",
-        error.response?.data || error.message
-      );
-      toast.error(`${product.name} failed to delete!`);
-      toast.error(Object.values(error.response?.data.errors).join(", "));
-    }
-  };
+  const { isModalOpen, setIsModalOpen, handleEdit, handleDelete } = useAProduct(
+    product,
+    setProducts
+  );
 
   return (
     <div className="border p-6 rounded-2xl shadow-lg bg-white w-full max-w-sm box-border flex flex-col items-center text-center">

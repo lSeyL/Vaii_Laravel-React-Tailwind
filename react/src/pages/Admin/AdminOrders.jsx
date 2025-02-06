@@ -30,7 +30,7 @@ function AdminOrders() {
         {orders.length === 0 ? (
           <p>No orders found.</p>
         ) : (
-          orders.map((order) => <AdminOrder order={order} />)
+          orders.map((order) => <AdminOrder order={order} key={order.id} />)
         )}
       </div>
 

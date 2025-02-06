@@ -1,47 +1,14 @@
-import React, { useState } from "react";
-import { useGlobalContext } from "../../providers/globalProvider";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useStateContext } from "../../providers/userContext";
+import { Link, Navigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
 import Loader from "../../components/UI/Loader";
-import api from "../../services/api";
+import { useCheckout } from "./hooks/useCheckout";
 function Checkout() {
-  const { cart, clearCart } = useGlobalContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const { token, user } = useStateContext();
-  const navigate = useNavigate();
+  const { cart, isLoading, handleBuyItems, total, user, token } = useCheckout();
 
   if (cart.length === 0 || !user || !token) {
     return <Navigate to="/cart" replace />;
   }
 
-  const handleBuyItems = async (ev) => {
-    ev.preventDefault();
-    setIsLoading(true);
-
-    try {
-      console.log("🛒 Sending purchase request:", cart);
-      const response = await api.post("/purchase", { cart });
-      console.log("✅ Purchase Successful:", response.data);
-      clearCart();
-      setIsLoading(false);
-      if (!token) {
-        navigate("/", { replace: true });
-      } else {
-        navigate("/profile/my-orders");
-      }
-    } catch (error) {
-      console.error(
-        "❌ Purchase Failed:",
-        error.response?.data || error.message
-      );
-      setIsLoading(false);
-    }
-  };
-
-  const subtotal = cart.reduce((acc, item) => acc + Number(item.price), 0);
-  const tax = subtotal * 0.1;
-  const total = subtotal + tax;
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       {isLoading && <Loader />}

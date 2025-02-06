@@ -3,7 +3,7 @@ import api from "../../services/api";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AdminCategory from "./AdminComponents/AdminCategory";
 import PaginationControls from "./../../components/UI/PaginationControls";
-
+import { toast } from "react-toastify";
 function AdminCategories() {
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
